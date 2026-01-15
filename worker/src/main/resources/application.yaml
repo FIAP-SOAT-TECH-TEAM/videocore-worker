@@ -24,16 +24,14 @@ server:
 # Observabilidade
 management:
   otlp:
-    # https://github.com/spring-projects/spring-boot/issues/37278
     metrics:
       export:
-        url: ${OTEL_HTTP_METRICS_ENDPOINT:}
-        step: 10s
+        enabled: false
 
   opentelemetry:
     resource-attributes:
       service.name: ${spring.application.name}
-      service.version: ${version:0.0.1}
+      service.version: ${spring.application.version}
 
   endpoints:
     web:
@@ -48,6 +46,9 @@ otel:
   exporter:
     otlp:
       traces:
+        endpoint: ${OTEL_GRPC_ENDPOINT:}
+        protocol: grpc
+      metrics:
         endpoint: ${OTEL_GRPC_ENDPOINT:}
         protocol: grpc
       logs:
