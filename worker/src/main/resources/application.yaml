@@ -1,3 +1,55 @@
 spring:
   application:
     name: worker
+
+  threads:
+    virtual:
+      enabled: true
+
+  profiles:
+    active: local
+
+# Tomcat
+server:
+  address: ${SERVER_ADDRESS:}
+  port: ${SERVER_PORT:}
+  servlet:
+    context-path: /
+  compression:
+    enabled: true
+  error:
+    include-message: always
+    include-binding-errors: always
+
+# Observabilidade
+management:
+  otlp:
+    # https://github.com/spring-projects/spring-boot/issues/37278
+    metrics:
+      export:
+        url: ${OTEL_HTTP_METRICS_ENDPOINT:}
+        step: 10s
+
+  opentelemetry:
+    resource-attributes:
+      service.name: ${spring.application.name}
+      service.version: ${version:0.0.1}
+
+  endpoints:
+    web:
+      exposure:
+        include: health, info, metrics
+
+# Observabilidade
+otel:
+  instrumentation:
+    micrometer:
+      enabled: true
+  exporter:
+    otlp:
+      traces:
+        endpoint: ${OTEL_GRPC_ENDPOINT:}
+        protocol: grpc
+      logs:
+        endpoint: ${OTEL_GRPC_ENDPOINT:}
+        protocol: grpc

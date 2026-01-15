@@ -1,0 +1,9 @@
+spring:
+  config:
+    import: optional:file:.env[.properties]
+
+# Logging
+logging:
+  level:
+    root: INFO
+    com.soat: TRACE

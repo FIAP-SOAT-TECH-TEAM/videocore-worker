@@ -19,8 +19,44 @@ repositories {
 	mavenCentral()
 }
 
+ext {
+    set('lombokVersion', "1.18.42")
+    set('mapStructVersion', "1.6.3")
+    set('logstashEncoder', "9.0")
+
+    set('openTelBomVersion', "1.58.0")
+    set('openTelInstBomVersion', "2.23.0-alpha")
+    set('micrometerBomVersion', "1.16.2")
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "io.opentelemetry:opentelemetry-bom:${openTelBomVersion}"
+        mavenBom "io.opentelemetry.instrumentation:opentelemetry-instrumentation-bom-alpha:${openTelInstBomVersion}"
+        mavenBom "io.micrometer:micrometer-bom:${micrometerBomVersion}"
+
+    }
+}
+
 dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter'
+
+    // Observabilidade
+    implementation 'org.springframework.boot:spring-boot-starter-opentelemetry'
+    runtimeOnly 'org.springframework.boot:spring-boot-starter-actuator'
+    runtimeOnly 'io.opentelemetry:opentelemetry-exporter-otlp'
+    runtimeOnly 'io.micrometer:micrometer-tracing-bridge-otel'
+    runtimeOnly 'io.micrometer:micrometer-registry-otlp'
+    runtimeOnly 'io.opentelemetry.instrumentation:opentelemetry-spring-boot-starter'
+    runtimeOnly 'io.opentelemetry.instrumentation:opentelemetry-logback-mdc-1.0'
+    runtimeOnly "net.logstash.logback:logstash-logback-encoder:${logstashEncoder}"
+
+    // Lombok e MapStruct
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    compileOnly "org.mapstruct:mapstruct:${mapStructVersion}"
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapStructVersion}"
 
     // Teste
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
