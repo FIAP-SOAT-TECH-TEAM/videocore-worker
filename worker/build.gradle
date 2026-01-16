@@ -42,14 +42,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter'
 
-    // Observabilidade
+    // Observabilidade (Instrumentação automática)
     implementation 'org.springframework.boot:spring-boot-starter-opentelemetry'
     runtimeOnly 'org.springframework.boot:spring-boot-starter-actuator'
-    runtimeOnly 'io.opentelemetry:opentelemetry-exporter-otlp'
-    runtimeOnly 'io.micrometer:micrometer-tracing-bridge-otel'
-    runtimeOnly 'io.micrometer:micrometer-registry-otlp'
     runtimeOnly 'io.opentelemetry.instrumentation:opentelemetry-spring-boot-starter'
-    runtimeOnly 'io.opentelemetry.instrumentation:opentelemetry-logback-mdc-1.0'
     runtimeOnly "net.logstash.logback:logstash-logback-encoder:${logstashEncoder}"
 
     // Lombok e MapStruct

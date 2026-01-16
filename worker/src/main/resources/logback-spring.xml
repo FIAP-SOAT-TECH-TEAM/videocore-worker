@@ -20,11 +20,14 @@
         <includeCallerData>false</includeCallerData>
     </appender>
 
-    <appender name="OpenTelemetry" class="io.opentelemetry.instrumentation.logback.mdc.v1_0.OpenTelemetryAppender">
-        <appender-ref ref="ASYNC_CONSOLE" />
+    <appender name="OpenTelemetry" class="io.opentelemetry.instrumentation.logback.appender.v1_0.OpenTelemetryAppender">
+        <captureExperimentalAttributes>true</captureExperimentalAttributes>
+        <captureMdcAttributes>*</captureMdcAttributes>
     </appender>
 
     <root level="INFO">
+        <appender-ref ref="ASYNC_CONSOLE"/>
         <appender-ref ref="OpenTelemetry"/>
     </root>
+
 </configuration>
