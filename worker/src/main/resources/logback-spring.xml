@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
+    <!--Appender base de STDOUT-->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="net.logstash.logback.encoder.LogstashEncoder">
             <includeMdcKeyName>trace_id</includeMdcKeyName>
@@ -13,6 +14,8 @@
             </decorator>
         </encoder>
     </appender>
+
+    <!--Wrapper Appender para STDOUT de maneira assíncrona-->
     <appender name="ASYNC_CONSOLE" class="ch.qos.logback.classic.AsyncAppender">
         <appender-ref ref="CONSOLE" />
         <discardingThreshold>20</discardingThreshold>
@@ -20,14 +23,19 @@
         <includeCallerData>false</includeCallerData>
     </appender>
 
+    <!--Appender responsável por encaminhar eventos de log do LobBack para a SDK do OpenTelemetry-->
     <appender name="OpenTelemetry" class="io.opentelemetry.instrumentation.logback.appender.v1_0.OpenTelemetryAppender">
         <captureExperimentalAttributes>true</captureExperimentalAttributes>
         <captureMdcAttributes>*</captureMdcAttributes>
     </appender>
 
+    <!--Appender para registro dos eventos de log do LogBack como eventos no Tracing Span ativo-->
+    <appender name="OpenTelemetryTracing" class="com.soat.fiap.videocore.worker.infrastructure.common.observability.logback.appenders.OtelTracingLogAppender"/>
+
     <root level="INFO">
         <appender-ref ref="ASYNC_CONSOLE"/>
         <appender-ref ref="OpenTelemetry"/>
+        <appender-ref ref="OpenTelemetryTracing"/>
     </root>
 
 </configuration>
