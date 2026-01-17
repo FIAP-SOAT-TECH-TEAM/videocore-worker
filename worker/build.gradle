@@ -44,6 +44,7 @@ dependencies {
 
     // Observabilidade (Instrumentação automática)
     implementation 'org.springframework.boot:spring-boot-starter-opentelemetry'
+    implementation 'org.springframework.boot:spring-boot-starter-aspectj'
     runtimeOnly 'org.springframework.boot:spring-boot-starter-actuator'
     runtimeOnly 'io.opentelemetry.instrumentation:opentelemetry-spring-boot-starter'
     runtimeOnly "net.logstash.logback:logstash-logback-encoder:${logstashEncoder}"
