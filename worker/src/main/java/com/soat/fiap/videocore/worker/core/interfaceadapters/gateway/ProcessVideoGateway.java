@@ -1,5 +1,6 @@
 package com.soat.fiap.videocore.worker.core.interfaceadapters.gateway;
 
+import com.soat.fiap.videocore.worker.common.observability.trace.WithSpan;
 import com.soat.fiap.videocore.worker.infrastructure.common.source.ProcessVideoSource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -38,6 +39,7 @@ public class ProcessVideoGateway {
      * @param zipOutputStream destino dos frames compactados
      * @throws IOException em caso de erro de escrita
      */
+    @WithSpan(name = "process.video.capture-images")
     public void processVideo(File file, long currentTimestamp, ZipOutputStream zipOutputStream, String imageName) throws IOException {
         processVideoSource.processVideo(file, currentTimestamp, zipOutputStream, imageName);
     }
