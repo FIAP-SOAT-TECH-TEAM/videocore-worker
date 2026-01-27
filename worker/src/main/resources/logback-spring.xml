@@ -4,9 +4,7 @@
     <!--Appender base de STDOUT-->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="net.logstash.logback.encoder.LogstashEncoder">
-            <includeMdcKeyName>trace_id</includeMdcKeyName>
-            <includeMdcKeyName>span_id</includeMdcKeyName>
-            <includeMdcKeyName>trace_flags</includeMdcKeyName>
+            <includeMdc>true</includeMdc>
             <decorator class="net.logstash.logback.decorate.PrettyPrintingDecorator"/>
             <decorator class="net.logstash.logback.mask.MaskingJsonGeneratorDecorator">
                 <defaultMask>XXXX</defaultMask>
@@ -30,7 +28,7 @@
     </appender>
 
     <!--Appender para registro dos eventos de log do LogBack como eventos no Tracing Span ativo-->
-    <appender name="OpenTelemetryTracing" class="com.soat.fiap.videocore.worker.infrastructure.common.observability.logback.appenders.OtelTracingLogAppender"/>
+    <appender name="OpenTelemetryTracing" class="com.soat.fiap.videocore.worker.common.observability.trace.logback.appenders.OtelTracingLogAppender"/>
 
     <root level="INFO">
         <appender-ref ref="ASYNC_CONSOLE"/>

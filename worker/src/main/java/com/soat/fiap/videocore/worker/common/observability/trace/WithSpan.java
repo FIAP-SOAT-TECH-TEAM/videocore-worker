@@ -1,4 +1,4 @@
-package com.soat.fiap.videocore.worker.infrastructure.common.observability.tracing;
+package com.soat.fiap.videocore.worker.common.observability.trace;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

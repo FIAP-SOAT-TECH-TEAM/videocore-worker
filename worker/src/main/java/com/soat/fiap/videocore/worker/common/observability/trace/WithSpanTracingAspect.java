@@ -1,4 +1,4 @@
-package com.soat.fiap.videocore.worker.infrastructure.common.observability.tracing;
+package com.soat.fiap.videocore.worker.common.observability.trace;
 
 import io.micrometer.tracing.Tracer;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ public class WithSpanTracingAspect {
 
     private final Tracer tracer;
 
-    @Around("@annotation(com.soat.fiap.videocore.worker.infrastructure.common.observability.tracing.WithSpan)")
+    @Around("@annotation(com.soat.fiap.videocore.worker.common.observability.trace.WithSpan)")
     public Object trace(ProceedingJoinPoint pjp) throws Throwable {
         var signature = (MethodSignature) pjp.getSignature();
         var method = signature.getMethod();
