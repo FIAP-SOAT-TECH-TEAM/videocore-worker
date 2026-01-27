@@ -5,6 +5,7 @@ import com.soat.fiap.videocore.worker.core.domain.exceptions.ProcessVideoExcepti
 import com.soat.fiap.videocore.worker.core.domain.model.Video;
 import com.soat.fiap.videocore.worker.core.interfaceadapters.gateway.ProcessVideoGateway;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.zip.ZipOutputStream;
@@ -13,6 +14,7 @@ import java.util.zip.ZipOutputStream;
  * Caso de uso responsável por processar um vídeo e extrair frames
  * em intervalos fixos de tempo, exportando-os como imagens em um ZIP.
  */
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class ProcessVideoUseCase {
@@ -29,15 +31,23 @@ public class ProcessVideoUseCase {
      */
     @WithSpan(name = "process.video.image")
     public void processVideo(Video video, ZipOutputStream zipOutputStream) {
-        var frameCutMicro = Math.round(video.getMinuteFrameCut() * 60_000_000L);
-        var totalDurationMicro = Math.round(video.getDurationMinutes() * 60_000_000L);
+        var frameCutMicro = video.getMinuteFrameCut() * 60_000_000L;
+        var totalDurationMicro = video.getDurationMinutes() * 60_000_000L;
 
         try (zipOutputStream) {
-            for (var currentTimestamp = 0L; currentTimestamp < totalDurationMicro; currentTimestamp += frameCutMicro) {
-                var cutMomentMinutes = currentTimestamp / 60_000_000L;
+            for (var currentTimestampMicro = 0L; currentTimestampMicro <= totalDurationMicro; currentTimestampMicro += frameCutMicro) {
+                var cutMomentMinutes = currentTimestampMicro / 60_000_000L;
                 var imageName = String.format("frame_at_%dm.jpg", cutMomentMinutes);
 
-                processVideoGateway.processVideo(video.getVideoFile(), currentTimestamp, zipOutputStream, imageName);
+                processVideoGateway.processVideo(video.getVideoFile(), currentTimestampMicro, zipOutputStream, imageName);
+
+                var currentPercent = ((double) currentTimestampMicro / totalDurationMicro) * 100;
+
+                log.debug(String.format("Vídeo: %s processado %.2f%%", video.getVideoName(), currentPercent));
+
+                var nextCurrentTimestampMicro = currentTimestampMicro + frameCutMicro;
+                if (currentTimestampMicro < totalDurationMicro && nextCurrentTimestampMicro > totalDurationMicro)
+                    frameCutMicro = totalDurationMicro - currentTimestampMicro;
             }
 
         } catch (Exception e) {

@@ -7,8 +7,6 @@ import com.soat.fiap.videocore.worker.infrastructure.in.event.listener.azsvcbus.
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
-
 /**
  * Controller responsável por orquestrar o processamento de vídeos
  * a partir de eventos de criação de blob.
@@ -20,6 +18,7 @@ public class ProcessVideoController {
     private final GetVideoUseCase getVideoUseCase;
     private final GetZipOutputStreamUseCase getZipOutputStreamUseCase;
     private final DownloadVideoToTempFileUseCase downloadVideoToTempFileUseCase;
+    private final GetVideoDurationMinutesUseCase getVideoDurationMinutesUseCase;
     private final ProcessVideoUseCase processVideoUseCase;
     private final DeleteVideoFileUseCase deleteVideoFileUseCase;
 
@@ -28,15 +27,18 @@ public class ProcessVideoController {
      *
      * @param blobCreatedCloudEventSchema evento CloudEvent contendo dados do blob
      */
+    @WithSpan(name = "process.event")
     public void processVideo(BlobCreatedCloudEventSchema blobCreatedCloudEventSchema) {
         var videoUrl = blobCreatedCloudEventSchema.getData().getUrl();
         Video video = null;
 
         try {
             video = getVideoUseCase.getVideo(videoUrl);
-            downloadVideoToTempFileUseCase.downloadVideoToTempFile(video);
 
+            downloadVideoToTempFileUseCase.downloadVideoToTempFile(video);
+            getVideoDurationMinutesUseCase.getVideoDurationMinutes(video);
             var zipOutputStream = getZipOutputStreamUseCase.getZipOutputStream(video);
+
             processVideoUseCase.processVideo(video, zipOutputStream);
         }
         finally {

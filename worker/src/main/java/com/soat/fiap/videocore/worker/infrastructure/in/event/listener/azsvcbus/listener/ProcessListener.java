@@ -29,7 +29,6 @@ public class ProcessListener {
      * @param message Wrapper da mensagem recebida
      */
     @ServiceBusListener(destination = EventMessagingChannel.PROCESS_QUEUE)
-    @WithSpan(name = "process.event.blob.storage.created")
     public void processEvent(ServiceBusReceivedMessage message) throws Exception {
         try {
             var rawBody = message.getBody().toString();

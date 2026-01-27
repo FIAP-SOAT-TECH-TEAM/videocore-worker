@@ -3,9 +3,7 @@ package com.soat.fiap.videocore.worker.core.application.usecase;
 import com.soat.fiap.videocore.worker.common.observability.trace.WithSpan;
 import com.soat.fiap.videocore.worker.core.domain.exceptions.ProcessVideoException;
 import com.soat.fiap.videocore.worker.core.domain.model.Video;
-import com.soat.fiap.videocore.worker.core.domain.vo.DurationMinutes;
 import com.soat.fiap.videocore.worker.core.interfaceadapters.gateway.FileGateway;
-import com.soat.fiap.videocore.worker.core.interfaceadapters.gateway.ProcessVideoGateway;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +24,6 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class DownloadVideoToTempFileUseCase {
 
-    private final ProcessVideoGateway processVideoGateway;
     private final FileGateway fileGateway;
 
     /**
@@ -46,17 +43,9 @@ public class DownloadVideoToTempFileUseCase {
             );
 
             var tempFile = fileGateway.downloadTempFileFromInputStream(inputStream, video.getVideoExtension(), tempFileName);
-
-            var durationFileInMinutes = processVideoGateway.getVideoDurationMinutes(tempFile);
-            var durationMinutes = new DurationMinutes(durationFileInMinutes);
-
-            video.setDurationMinutes(durationMinutes);
             video.setVideoFile(tempFile);
         } catch (IOException e) {
             throw new ProcessVideoException("Erro ao fazer o download do vídeo", e);
-        }
-        catch (IllegalStateException e) {
-            throw new ProcessVideoException("Erro ao recuperar duração do vídeo", e);
         }
     }
 }
