@@ -1,16 +1,13 @@
 package com.soat.fiap.videocore.worker.core.application.usecase;
 
 import com.soat.fiap.videocore.worker.common.observability.trace.WithSpan;
-import com.soat.fiap.videocore.worker.core.domain.event.ProcessVideoStatusUpdateEvent;
 import com.soat.fiap.videocore.worker.core.domain.exceptions.ProcessVideoException;
 import com.soat.fiap.videocore.worker.core.domain.model.Video;
-import com.soat.fiap.videocore.worker.core.interfaceadapters.gateway.EventPublisherGateway;
 import com.soat.fiap.videocore.worker.core.interfaceadapters.gateway.ProcessVideoGateway;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
 import java.util.zip.ZipOutputStream;
 
 /**
@@ -22,8 +19,8 @@ import java.util.zip.ZipOutputStream;
 @RequiredArgsConstructor
 public class ProcessVideoUseCase {
 
+    private final PublishVideoStatusProcessUpdateUseCase publishVideoStatusProcessUpdateUseCase;
     private final ProcessVideoGateway processVideoGateway;
-    private final EventPublisherGateway eventPublisherGateway;
 
     /**
      * Processa o vídeo, capturando frames em intervalos definidos em minutos
@@ -46,16 +43,7 @@ public class ProcessVideoUseCase {
                 processVideoGateway.processVideo(video.getVideoFile(), currentTimestampMicro, zipOutputStream, imageName);
 
                 var currentPercent = ((double) currentTimestampMicro / totalDurationMicro) * 100;
-                var updateStatusEvent = new ProcessVideoStatusUpdateEvent(
-                        video.getVideoName(),
-                        video.getUserId(),
-                        video.getRequestId(),
-                        video.getDurationMinutes(),
-                        video.getMinuteFrameCut(),
-                        currentPercent,
-                        Instant.now()
-                );
-                eventPublisherGateway.publishVideoStatusProcessUpdateEvent(updateStatusEvent);
+                publishVideoStatusProcessUpdateUseCase.publishVideoStatusProcessUpdate(video, currentPercent);
 
                 var nextCurrentTimestampMicro = currentTimestampMicro + frameCutMicro;
                 if (currentTimestampMicro < totalDurationMicro && nextCurrentTimestampMicro > totalDurationMicro)

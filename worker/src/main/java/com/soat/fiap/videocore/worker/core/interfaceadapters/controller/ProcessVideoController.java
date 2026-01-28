@@ -27,10 +27,10 @@ public class ProcessVideoController {
      * @param blobCreatedCloudEventSchema evento CloudEvent contendo dados do blob
      */
     public void processVideo(BlobCreatedCloudEventSchema blobCreatedCloudEventSchema) {
-        var videoUrl = blobCreatedCloudEventSchema.getData().getUrl();
         Video video = null;
 
         try {
+            var videoUrl = blobCreatedCloudEventSchema.getData().getUrl();
             video = getVideoUseCase.getVideo(videoUrl);
 
             downloadVideoToTempFileUseCase.downloadVideoToTempFile(video);
