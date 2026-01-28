@@ -28,6 +28,7 @@ public class ProcessListener {
      *
      * @param message Wrapper da mensagem recebida
      */
+    @WithSpan(name = "process.event")
     @ServiceBusListener(destination = EventMessagingChannel.PROCESS_QUEUE)
     public void processEvent(ServiceBusReceivedMessage message) throws Exception {
         try {

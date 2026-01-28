@@ -1,4 +1,4 @@
-package com.soat.fiap.videocore.worker.infrastructure.common.azure.blobstorage;
+package com.soat.fiap.videocore.worker.infrastructure.common.config.azure.blobstorage;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

@@ -1,5 +1,6 @@
 package com.soat.fiap.videocore.worker.core.interfaceadapters.gateway;
 
+import com.soat.fiap.videocore.worker.common.observability.trace.TraceContext;
 import com.soat.fiap.videocore.worker.common.observability.trace.WithSpan;
 import com.soat.fiap.videocore.worker.core.domain.event.ProcessVideoStatusUpdateEvent;
 import com.soat.fiap.videocore.worker.core.interfaceadapters.mapper.EventMapper;
@@ -26,5 +27,7 @@ public class EventPublisherGateway {
     public void publishVideoStatusProcessUpdateEvent(ProcessVideoStatusUpdateEvent event) {
         var dto = eventMapper.toDto(event);
         eventPublisherSource.publishVideoStatusProcessUpdateEvent(dto);
+
+        TraceContext.addEvent("event.object", event);
     }
 }

@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
 import java.util.zip.ZipOutputStream;
 
 /**
@@ -45,16 +46,14 @@ public class ProcessVideoUseCase {
                 processVideoGateway.processVideo(video.getVideoFile(), currentTimestampMicro, zipOutputStream, imageName);
 
                 var currentPercent = ((double) currentTimestampMicro / totalDurationMicro) * 100;
-
-                log.debug(String.format("Vídeo: %s processado %.2f%%", video.getVideoName(), currentPercent));
-
                 var updateStatusEvent = new ProcessVideoStatusUpdateEvent(
                         video.getVideoName(),
                         video.getUserId(),
                         video.getRequestId(),
                         video.getDurationMinutes(),
                         video.getMinuteFrameCut(),
-                        currentPercent
+                        currentPercent,
+                        Instant.now()
                 );
                 eventPublisherGateway.publishVideoStatusProcessUpdateEvent(updateStatusEvent);
 

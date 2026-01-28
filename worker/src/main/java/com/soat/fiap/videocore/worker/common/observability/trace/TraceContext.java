@@ -51,4 +51,23 @@ public class TraceContext {
             span.addEvent(name, eventAttributesBuilder.build());
         }
     }
+
+    /**
+     * Adiciona um evento ao span atual registrando um único objeto como tag.
+     *
+     * @param name  nome do evento
+     * @param value objeto a ser registrado como tag do evento
+     */
+    public static void addEvent(String name, Object value) {
+        var span = currentSpan();
+
+        if (span != null && value != null) {
+            span.addEvent(
+                    name,
+                    Attributes.builder()
+                            .put("value", value.toString())
+                            .build()
+            );
+        }
+    }
 }

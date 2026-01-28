@@ -22,14 +22,14 @@ repositories {
 ext {
     set('lombokVersion', "1.18.42")
     set('mapStructVersion', "1.6.3")
-    set('logstashEncoder', "9.0")
+    set('logstashEncoderVersion', "9.0")
+    set('azureBlobSdkVersion', "12.31.1")
+    set('javaCvVersion', "1.5.12")
 
     set('openTelBomVersion', "1.58.0")
     set('openTelInstBomVersion', "2.23.0-alpha")
     set('micrometerBomVersion', "1.16.2")
     set('springAzureCloudBomVersion', "7.0.0-beta.1")
-    set('azureBlobSdk', "12.31.1")
-    set('javaCvVersion', "1.5.12")
 }
 
 dependencyManagement {
@@ -48,14 +48,13 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter'
 
-    // ByteCode
+    // Media Processor
     implementation "org.bytedeco:javacv-platform:${javaCvVersion}"
-
 
     // Azure
     implementation 'com.azure.spring:spring-cloud-azure-starter'
     implementation 'com.azure.spring:spring-messaging-azure-servicebus'
-    implementation "com.azure:azure-storage-blob:${azureBlobSdk}"
+    implementation "com.azure:azure-storage-blob:${azureBlobSdkVersion}"
 
     // AOP
     implementation 'org.springframework.boot:spring-boot-starter-aspectj'
@@ -64,7 +63,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-opentelemetry'
     runtimeOnly 'org.springframework.boot:spring-boot-starter-actuator'
     runtimeOnly 'io.opentelemetry.instrumentation:opentelemetry-spring-boot-starter'
-    runtimeOnly "net.logstash.logback:logstash-logback-encoder:${logstashEncoder}"
+    runtimeOnly "net.logstash.logback:logstash-logback-encoder:${logstashEncoderVersion}"
 
     // Lombok e MapStruct
     compileOnly "org.projectlombok:lombok:${lombokVersion}"

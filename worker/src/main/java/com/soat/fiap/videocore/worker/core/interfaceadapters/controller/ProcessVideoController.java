@@ -1,6 +1,5 @@
 package com.soat.fiap.videocore.worker.core.interfaceadapters.controller;
 
-import com.soat.fiap.videocore.worker.common.observability.trace.WithSpan;
 import com.soat.fiap.videocore.worker.core.application.usecase.*;
 import com.soat.fiap.videocore.worker.core.domain.model.Video;
 import com.soat.fiap.videocore.worker.infrastructure.in.event.listener.azsvcbus.dto.BlobCreatedCloudEventSchema;
@@ -27,7 +26,6 @@ public class ProcessVideoController {
      *
      * @param blobCreatedCloudEventSchema evento CloudEvent contendo dados do blob
      */
-    @WithSpan(name = "process.event")
     public void processVideo(BlobCreatedCloudEventSchema blobCreatedCloudEventSchema) {
         var videoUrl = blobCreatedCloudEventSchema.getData().getUrl();
         Video video = null;

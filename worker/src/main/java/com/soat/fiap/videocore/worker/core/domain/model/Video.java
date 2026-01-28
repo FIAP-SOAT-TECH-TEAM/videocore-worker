@@ -13,8 +13,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 /**
- * Representa um vídeo carregado para processamento.
- * Contém o stream, a duração e metadados de rastreabilidade.
+ * Objeto de domínio que representa um vídeo carregado para processamento.
  */
 @Getter
 public class Video {
