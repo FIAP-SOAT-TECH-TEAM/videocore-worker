@@ -27,7 +27,7 @@ public class DeleteVideoFileUseCase {
      * @param video objeto de domínio contendo o arquivo do vídeo a ser removido
      * @throws ProcessVideoException caso ocorra erro de I/O durante a exclusão do arquivo
      */
-    @WithSpan(name = "process.video.delete")
+    @WithSpan(name = "usecase.delete.video")
     public void deleteVideoFile(Video video) {
         try {
             if (video != null && video.getVideoFile() != null)

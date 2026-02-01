@@ -23,7 +23,7 @@ public class EventPublisherGateway {
      *
      * @param event evento de atualização de status a ser publicado
      */
-    @WithSpan(name = "process.video.publish-process-update-status-event")
+    @WithSpan(name = "gateway.publish.video.status.update.event")
     public void publishVideoStatusProcessUpdateEvent(ProcessVideoStatusUpdateEvent event) {
         var dto = eventMapper.toDto(event);
         eventPublisherSource.publishVideoStatusProcessUpdateEvent(dto);

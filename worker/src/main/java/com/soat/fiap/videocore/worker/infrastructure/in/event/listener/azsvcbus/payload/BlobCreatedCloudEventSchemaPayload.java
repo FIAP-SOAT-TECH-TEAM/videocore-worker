@@ -1,18 +1,18 @@
-package com.soat.fiap.videocore.worker.infrastructure.in.event.listener.azsvcbus.dto;
+package com.soat.fiap.videocore.worker.infrastructure.in.event.listener.azsvcbus.payload;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.time.OffsetDateTime;
 
 /**
- * DTO que representa um evento do tipo Microsoft.Storage.BlobCreated,
+ * Payload que representa um evento do tipo Microsoft.Storage.BlobCreated,
  * conforme o esquema CloudEvent do Azure Event Grid para Blob Storage.
  * <a href="https://learn.microsoft.com/en-us/azure/event-grid/event-schema-blob-storage?tabs=cloud-event-schema#example-events">Microsoft.Storage.BlobCreated event</a>
  * </p>
  */
 @Data
 @NoArgsConstructor
-public class BlobCreatedCloudEventSchema {
+public class BlobCreatedCloudEventSchemaPayload {
 
     /**
      * Identifica o recurso de origem do evento.

@@ -1,5 +1,6 @@
 package com.soat.fiap.videocore.worker.core.interfaceadapters.gateway;
 
+import com.soat.fiap.videocore.worker.common.observability.trace.WithSpan;
 import com.soat.fiap.videocore.worker.infrastructure.common.source.FileSource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -23,6 +24,7 @@ public class FileGateway {
      * @param file arquivo a ser deletado
      * @throws IOException em caso de falha na exclusão
      */
+    @WithSpan(name = "gateway.delete.video.file")
     public void deleteFileIfExists(File file) throws IOException {
         fileSource.deleteFileIfExists(file);
     }
@@ -36,6 +38,7 @@ public class FileGateway {
      * @return arquivo temporário criado
      * @throws IOException em caso de erro na escrita do arquivo
      */
+    @WithSpan(name = "gateway.download.video")
     public File downloadTempFileFromInputStream(InputStream inputStream, String extension, String fileName) throws IOException {
         return fileSource.downloadTempFileFromInputStream(inputStream, extension, fileName);
     }

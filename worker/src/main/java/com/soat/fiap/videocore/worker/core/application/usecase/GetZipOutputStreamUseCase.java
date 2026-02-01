@@ -26,7 +26,7 @@ public class GetZipOutputStreamUseCase {
      * @return stream ZIP válido
      * @throws ProcessVideoException se o stream não puder ser obtido
      */
-    @WithSpan(name = "process.video.get.zip-output-stream")
+    @WithSpan(name = "usecase.get.video.zip.output.stream")
     public ZipOutputStream getZipOutputStream(Video video) {
         var zipOutputStream = videoGateway.getZipOutputStream(video);
 

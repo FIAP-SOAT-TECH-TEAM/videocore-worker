@@ -1,4 +1,4 @@
-package com.soat.fiap.videocore.worker.infrastructure.out.blobstorage.mapper;
+package com.soat.fiap.videocore.worker.infrastructure.out.persistence.blobstorage.mapper;
 
 import com.soat.fiap.videocore.worker.core.interfaceadapters.dto.VideoDto;
 import org.mapstruct.Mapper;
@@ -54,8 +54,7 @@ public interface VideoBlobMapper {
             return null;
         }
         var lastSlash = blobName.lastIndexOf('/');
-        var fileName = lastSlash >= 0 ? blobName.substring(lastSlash + 1) : blobName;
-        var lastDot = fileName.lastIndexOf('.');
-        return lastDot > 0 ? fileName.substring(0, lastDot) : fileName;
+
+        return lastSlash >= 0 ? blobName.substring(lastSlash + 1) : blobName;
     }
 }

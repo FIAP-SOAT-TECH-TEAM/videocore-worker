@@ -1,5 +1,6 @@
 package com.soat.fiap.videocore.worker.core.interfaceadapters.gateway;
 
+import com.soat.fiap.videocore.worker.common.observability.trace.WithSpan;
 import com.soat.fiap.videocore.worker.core.domain.model.Video;
 import com.soat.fiap.videocore.worker.core.interfaceadapters.mapper.VideoMapper;
 import com.soat.fiap.videocore.worker.infrastructure.common.source.VideoDataSource;
@@ -25,6 +26,7 @@ public class VideoGateway {
      * @param videoUrl URL completa do vídeo
      * @return O vídeo, ou nulo se não encontrado
      */
+    @WithSpan(name = "gateway.get.video.info")
     public Video getVideo(String videoUrl) {
         var video = videoDataSource.getVideo(videoUrl);
 
@@ -41,6 +43,7 @@ public class VideoGateway {
      * @param video vídeo de domínio a ser processado
      * @return {@link ZipOutputStream} associado ao vídeo
      */
+    @WithSpan(name = "gateway.get.video.zip.output.stream")
     public ZipOutputStream getZipOutputStream(Video video) {
         var videoDto = videoMapper.toDto(video);
 

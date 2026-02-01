@@ -2,7 +2,7 @@ package com.soat.fiap.videocore.worker.core.interfaceadapters.controller;
 
 import com.soat.fiap.videocore.worker.core.application.usecase.*;
 import com.soat.fiap.videocore.worker.core.domain.model.Video;
-import com.soat.fiap.videocore.worker.infrastructure.in.event.listener.azsvcbus.dto.BlobCreatedCloudEventSchema;
+import com.soat.fiap.videocore.worker.infrastructure.in.event.listener.azsvcbus.payload.BlobCreatedCloudEventSchemaPayload;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -24,13 +24,13 @@ public class ProcessVideoController {
     /**
      * Orquestra o fluxo de processamento de um vídeo recém-criado no blob storage. Capturando suas imagens e enviando para um destino
      *
-     * @param blobCreatedCloudEventSchema evento CloudEvent contendo dados do blob
+     * @param blobCreatedCloudEventSchemaPayload evento CloudEvent contendo dados do blob
      */
-    public void processVideo(BlobCreatedCloudEventSchema blobCreatedCloudEventSchema) {
+    public void processVideo(BlobCreatedCloudEventSchemaPayload blobCreatedCloudEventSchemaPayload) {
         Video video = null;
 
         try {
-            var videoUrl = blobCreatedCloudEventSchema.getData().getUrl();
+            var videoUrl = blobCreatedCloudEventSchemaPayload.getData().getUrl();
             video = getVideoUseCase.getVideo(videoUrl);
 
             downloadVideoToTempFileUseCase.downloadVideoToTempFile(video);

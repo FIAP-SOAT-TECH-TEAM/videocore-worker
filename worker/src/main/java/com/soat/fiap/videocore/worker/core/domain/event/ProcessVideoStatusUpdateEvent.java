@@ -9,7 +9,7 @@ import java.util.UUID;
  * @param videoName             Nome do vídeo.
  * @param userId                Identificador do usuário dono do vídeo.
  * @param requestId             Identificador da requisição de processamento.
- * @param durationMinutes       Duração total do vídeo em minutos.
+ * @param imageMinute           Minuto em que a imagem foi capturada.
  * @param frameCutMinutes       Intervalo de corte de frames em minutos.
  * @param percentStatusProcess  Percentual do vídeo já processado.
  * @param reportTime            Momento em que o reporte foi realizado.
@@ -18,7 +18,7 @@ public record ProcessVideoStatusUpdateEvent(
         String videoName,
         UUID userId,
         UUID requestId,
-        long durationMinutes,
+        long imageMinute,
         long frameCutMinutes,
         Double percentStatusProcess,
         Instant reportTime

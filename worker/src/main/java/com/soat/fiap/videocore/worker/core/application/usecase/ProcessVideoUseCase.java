@@ -30,20 +30,20 @@ public class ProcessVideoUseCase {
      * @param zipOutputStream destino onde as imagens serão compactadas
      * @throws ProcessVideoException em caso de erro durante o processamento do vídeo
      */
-    @WithSpan(name = "process.video.image")
+    @WithSpan(name = "usecase.process.video")
     public void processVideo(Video video, ZipOutputStream zipOutputStream) {
         var frameCutMicro = video.getMinuteFrameCut() * 60_000_000L;
         var totalDurationMicro = video.getDurationMinutes() * 60_000_000L;
 
         try (zipOutputStream) {
             for (var currentTimestampMicro = 0L; currentTimestampMicro <= totalDurationMicro; currentTimestampMicro += frameCutMicro) {
-                var cutMomentMinutes = currentTimestampMicro / 60_000_000L;
-                var imageName = String.format("frame_at_%dm.jpg", cutMomentMinutes);
+                var cutMomentMinute = currentTimestampMicro / 60_000_000L;
+                var imageName = String.format("frame_at_%dm.jpg", cutMomentMinute);
 
                 processVideoGateway.processVideo(video.getVideoFile(), currentTimestampMicro, zipOutputStream, imageName);
 
                 var currentPercent = ((double) currentTimestampMicro / totalDurationMicro) * 100;
-                publishVideoStatusProcessUpdateUseCase.publishVideoStatusProcessUpdate(video, currentPercent);
+                publishVideoStatusProcessUpdateUseCase.publishVideoStatusProcessUpdate(video, currentPercent, cutMomentMinute);
 
                 var nextCurrentTimestampMicro = currentTimestampMicro + frameCutMicro;
                 if (currentTimestampMicro < totalDurationMicro && nextCurrentTimestampMicro > totalDurationMicro)

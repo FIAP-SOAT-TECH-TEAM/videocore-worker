@@ -1,4 +1,4 @@
-package com.soat.fiap.videocore.worker.infrastructure.out.file;
+package com.soat.fiap.videocore.worker.infrastructure.out.persistence.file;
 
 import com.soat.fiap.videocore.worker.infrastructure.common.source.FileSource;
 import org.springframework.stereotype.Component;

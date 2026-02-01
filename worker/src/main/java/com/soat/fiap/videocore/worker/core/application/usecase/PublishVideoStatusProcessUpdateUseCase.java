@@ -1,5 +1,6 @@
 package com.soat.fiap.videocore.worker.core.application.usecase;
 
+import com.soat.fiap.videocore.worker.common.observability.trace.WithSpan;
 import com.soat.fiap.videocore.worker.core.domain.event.ProcessVideoStatusUpdateEvent;
 import com.soat.fiap.videocore.worker.core.domain.model.Video;
 import com.soat.fiap.videocore.worker.core.interfaceadapters.gateway.EventPublisherGateway;
@@ -15,7 +16,6 @@ import java.time.Instant;
 @RequiredArgsConstructor
 public class PublishVideoStatusProcessUpdateUseCase {
 
-    /** Gateway para publicação do evento de atualização de status. */
     private final EventPublisherGateway eventPublisherGateway;
 
     /**
@@ -23,18 +23,20 @@ public class PublishVideoStatusProcessUpdateUseCase {
      *
      * @param video           vídeo em processamento
      * @param currentPercent  percentual atual do processamento
+     * @param imageMinute     Minuto em que a imagem foi capturada
      */
-    public void publishVideoStatusProcessUpdate(Video video, Double currentPercent) {
-        var updateStatusEvent = new ProcessVideoStatusUpdateEvent(
+    @WithSpan(name = "usecase.publish.video.status.update.event")
+    public void publishVideoStatusProcessUpdate(Video video, Double currentPercent, long imageMinute) {
+        var event = new ProcessVideoStatusUpdateEvent(
                 video.getVideoName(),
                 video.getUserId(),
                 video.getRequestId(),
-                video.getDurationMinutes(),
+                imageMinute,
                 video.getMinuteFrameCut(),
                 currentPercent,
                 Instant.now()
         );
 
-        eventPublisherGateway.publishVideoStatusProcessUpdateEvent(updateStatusEvent);
+        eventPublisherGateway.publishVideoStatusProcessUpdateEvent(event);
     }
 }

@@ -26,6 +26,7 @@ public class ProcessVideoGateway {
      * @return duração do vídeo em minutos
      * @throws IllegalStateException em caso de erro na leitura do vídeo
      */
+    @WithSpan(name = "gateway.get.video.duration.minutes")
     public long getVideoDurationMinutes(File file) throws IllegalStateException {
         return processVideoSource.getVideoDurationMinutes(file);
     }
@@ -39,7 +40,7 @@ public class ProcessVideoGateway {
      * @param zipOutputStream destino dos frames compactados
      * @throws IOException em caso de erro de escrita
      */
-    @WithSpan(name = "process.video.capture-images")
+    @WithSpan(name = "gateway.process.video")
     public void processVideo(File file, long currentTimestamp, ZipOutputStream zipOutputStream, String imageName) throws IOException {
         processVideoSource.processVideo(file, currentTimestamp, zipOutputStream, imageName);
     }

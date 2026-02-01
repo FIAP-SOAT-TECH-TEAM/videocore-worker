@@ -1,11 +1,11 @@
-package com.soat.fiap.videocore.worker.infrastructure.out.blobstorage.repository;
+package com.soat.fiap.videocore.worker.infrastructure.out.persistence.blobstorage.repository;
 
 import com.azure.storage.blob.BlobClientBuilder;
 import com.soat.fiap.videocore.worker.common.observability.log.CanonicalContext;
 import com.soat.fiap.videocore.worker.core.interfaceadapters.dto.VideoDto;
 import com.soat.fiap.videocore.worker.infrastructure.common.config.azure.blobstorage.AzureBlobStorageProperties;
 import com.soat.fiap.videocore.worker.infrastructure.common.source.VideoDataSource;
-import com.soat.fiap.videocore.worker.infrastructure.out.blobstorage.mapper.VideoBlobMapper;
+import com.soat.fiap.videocore.worker.infrastructure.out.persistence.blobstorage.mapper.VideoBlobMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

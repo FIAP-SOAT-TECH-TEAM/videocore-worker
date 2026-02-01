@@ -24,7 +24,7 @@ public class GetVideoUseCase {
      * @return o vídeo
      * @throws VideoNotFoundException se o vídeo não for encontrado
      */
-    @WithSpan(name = "process.video.get.info")
+    @WithSpan(name = "usecase.get.video.info")
     public Video getVideo(String videoUrl) {
         var video = videoGateway.getVideo(videoUrl);
 

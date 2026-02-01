@@ -7,7 +7,7 @@ import com.soat.fiap.videocore.worker.common.observability.log.CanonicalContext;
 import com.soat.fiap.videocore.worker.common.observability.trace.WithSpan;
 import com.soat.fiap.videocore.worker.core.interfaceadapters.controller.ProcessVideoController;
 import com.soat.fiap.videocore.worker.infrastructure.common.event.EventMessagingChannel;
-import com.soat.fiap.videocore.worker.infrastructure.in.event.listener.azsvcbus.dto.BlobCreatedCloudEventSchema;
+import com.soat.fiap.videocore.worker.infrastructure.in.event.listener.azsvcbus.payload.BlobCreatedCloudEventSchemaPayload;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -35,7 +35,7 @@ public class ProcessListener {
             var rawBody = message.getBody().toString();
             CanonicalContext.add("event_object_string", rawBody);
 
-            var body = objectMapper.readValue(rawBody, BlobCreatedCloudEventSchema.class);
+            var body = objectMapper.readValue(rawBody, BlobCreatedCloudEventSchemaPayload.class);
             CanonicalContext.add("event_object", body);
 
             processVideoController.processVideo(body);

@@ -24,7 +24,7 @@ public class GetVideoDurationMinutesUseCase {
      * @param video objeto de vídeo a ser atualizado com a duração
      * @throws ProcessVideoException caso ocorra algum erro ao obter a duração
      */
-    @WithSpan(name = "process.video.get.video-duration-minutes")
+    @WithSpan(name = "usecase.get.video.duration.minutes")
     public void getVideoDurationMinutes(Video video) {
         try {
             var durationFileInMinutes = processVideoGateway.getVideoDurationMinutes(video.getVideoFile());

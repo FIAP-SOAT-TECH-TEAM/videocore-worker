@@ -32,7 +32,7 @@ public class DownloadVideoToTempFileUseCase {
      * @param video objeto de domínio que encapsula o stream do vídeo e seus metadados
      * @throws ProcessVideoException caso ocorra erro de I/O durante o download, criação do arquivo ou captura da sua duraação
      */
-    @WithSpan(name = "process.video.get.download")
+    @WithSpan(name = "usecase.download.video")
     public void downloadVideoToTempFile(Video video) {
         try (var inputStream = video.getInputStream()) {
             var tempFileName = String.format(
