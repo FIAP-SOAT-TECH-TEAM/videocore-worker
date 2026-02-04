@@ -10,7 +10,6 @@ import lombok.Getter;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Objects;
-import java.util.UUID;
 
 /**
  * Objeto de domínio que representa um vídeo carregado para processamento.
@@ -152,7 +151,7 @@ public class Video {
      *
      * @return userId
      */
-    public UUID getUserId() {
+    public String getUserId() {
         return metadata.userId();
     }
 
@@ -161,7 +160,7 @@ public class Video {
      *
      * @return requestId
      */
-    public UUID getRequestId() {
+    public String getRequestId() {
         return metadata.requestId();
     }
 }

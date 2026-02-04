@@ -2,7 +2,6 @@ package com.soat.fiap.videocore.worker.core.interfaceadapters.dto;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.UUID;
 
 /**
  * DTO para transporte de dados de vídeo entre camadas.
@@ -21,7 +20,7 @@ public record VideoDto(
         long durationMinutes,
         InputStream inputStream,
         long minuteFrameCut,
-        UUID userId,
-        UUID requestId
+        String userId,
+        String requestId
 ) {
 }

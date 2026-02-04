@@ -1,7 +1,6 @@
 package com.soat.fiap.videocore.worker.core.domain.event;
 
 import java.time.Instant;
-import java.util.UUID;
 
 /**
  * Evento de domínio que representa a atualização do status de processamento de um vídeo.
@@ -16,8 +15,8 @@ import java.util.UUID;
  */
 public record ProcessVideoStatusUpdateEvent(
         String videoName,
-        UUID userId,
-        UUID requestId,
+        String userId,
+        String requestId,
         long imageMinute,
         long frameCutMinutes,
         Double percentStatusProcess,

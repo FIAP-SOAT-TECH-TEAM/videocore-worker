@@ -1,8 +1,6 @@
 package com.soat.fiap.videocore.worker.core.interfaceadapters.dto;
 
-
 import java.time.Instant;
-import java.util.UUID;
 
 /**
  * DTO para transporte do evento de atualização do status de processamento do vídeo entre camadas.
@@ -17,8 +15,8 @@ import java.util.UUID;
  */
 public record ProcessVideoStatusUpdateEventDto(
         String videoName,
-        UUID userId,
-        UUID requestId,
+        String userId,
+        String requestId,
         long imageMinute,
         long frameCutMinutes,
         Double percentStatusProcess,
