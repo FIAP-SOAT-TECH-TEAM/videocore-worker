@@ -1,4 +1,4 @@
-package com.soat.fiap.videocore.worker.infrastructure.in.event.listener.azsvcbus.payload;
+package com.soat.fiap.videocore.worker.infrastructure.in.event.azsvcbus.payload;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

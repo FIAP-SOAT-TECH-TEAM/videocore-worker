@@ -2,7 +2,7 @@ package com.soat.fiap.videocore.worker.core.interfaceadapters.controller;
 
 import com.soat.fiap.videocore.worker.core.application.usecase.*;
 import com.soat.fiap.videocore.worker.core.domain.model.Video;
-import com.soat.fiap.videocore.worker.infrastructure.in.event.listener.azsvcbus.payload.BlobCreatedCloudEventSchemaPayload;
+import com.soat.fiap.videocore.worker.infrastructure.in.event.azsvcbus.payload.BlobCreatedCloudEventSchemaPayload;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
