@@ -32,6 +32,9 @@ public class ProcessVideoUseCase {
      */
     @WithSpan(name = "usecase.process.video")
     public void processVideo(Video video, ZipOutputStream zipOutputStream) {
+        if (video == null || zipOutputStream == null)
+            throw new ProcessVideoException("O video ou o output stream não podem ser nulos para o processamento");
+
         var frameCutMicro = video.getMinuteFrameCut() * 60_000_000L;
         var totalDurationMicro = video.getDurationMinutes() * 60_000_000L;
 

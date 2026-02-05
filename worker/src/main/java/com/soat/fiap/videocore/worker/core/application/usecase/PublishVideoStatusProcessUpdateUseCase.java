@@ -2,6 +2,7 @@ package com.soat.fiap.videocore.worker.core.application.usecase;
 
 import com.soat.fiap.videocore.worker.common.observability.trace.WithSpan;
 import com.soat.fiap.videocore.worker.core.domain.event.ProcessVideoStatusUpdateEvent;
+import com.soat.fiap.videocore.worker.core.domain.exceptions.ProcessVideoException;
 import com.soat.fiap.videocore.worker.core.domain.model.Video;
 import com.soat.fiap.videocore.worker.core.interfaceadapters.gateway.EventPublisherGateway;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,9 @@ public class PublishVideoStatusProcessUpdateUseCase {
      */
     @WithSpan(name = "usecase.publish.video.status.update.event")
     public void publishVideoStatusProcessUpdate(Video video, Double currentPercent, long imageMinute) {
+        if (video == null)
+            throw new ProcessVideoException("O video não pode ser nulo para publicação de evento");
+
         var event = new ProcessVideoStatusUpdateEvent(
                 video.getVideoName(),
                 video.getUserId(),

@@ -2,6 +2,7 @@ package com.soat.fiap.videocore.worker.core.application.usecase;
 
 import com.soat.fiap.videocore.worker.common.observability.trace.WithSpan;
 import com.soat.fiap.videocore.worker.core.domain.exceptions.ProcessVideoException;
+import com.soat.fiap.videocore.worker.core.domain.exceptions.VideoException;
 import com.soat.fiap.videocore.worker.core.domain.model.Video;
 import com.soat.fiap.videocore.worker.core.interfaceadapters.gateway.FileGateway;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,9 @@ public class DownloadVideoToTempFileUseCase {
      */
     @WithSpan(name = "usecase.download.video")
     public void downloadVideoToTempFile(Video video) {
+        if (video == null)
+            throw new ProcessVideoException("O video não pode ser nulo para download");
+
         try (var inputStream = video.getInputStream()) {
             var tempFileName = String.format(
                     "video-%s-%s-%s",

@@ -1,6 +1,7 @@
 package com.soat.fiap.videocore.worker.core.application.usecase;
 
 import com.soat.fiap.videocore.worker.common.observability.trace.WithSpan;
+import com.soat.fiap.videocore.worker.core.domain.exceptions.VideoException;
 import com.soat.fiap.videocore.worker.core.domain.exceptions.VideoNotFoundException;
 import com.soat.fiap.videocore.worker.core.domain.model.Video;
 import com.soat.fiap.videocore.worker.core.interfaceadapters.gateway.VideoGateway;
@@ -26,6 +27,9 @@ public class GetVideoUseCase {
      */
     @WithSpan(name = "usecase.get.video.info")
     public Video getVideo(String videoUrl) {
+        if (videoUrl == null || videoUrl.isBlank())
+            throw new VideoException("A URL do vídeo não pode ser nula para sua pesquisa");
+
         var video = videoGateway.getVideo(videoUrl);
 
         if (video == null)

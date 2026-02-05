@@ -26,6 +26,9 @@ public class GetVideoDurationMinutesUseCase {
      */
     @WithSpan(name = "usecase.get.video.duration.minutes")
     public void getVideoDurationMinutes(Video video) {
+        if (video == null)
+            throw new ProcessVideoException("O video não pode ser nulo para obtenção da sua duração");
+
         try {
             var durationFileInMinutes = processVideoGateway.getVideoDurationMinutes(video.getVideoFile());
             var durationMinutes = new DurationMinutes(durationFileInMinutes);

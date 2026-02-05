@@ -28,6 +28,9 @@ public class GetZipOutputStreamUseCase {
      */
     @WithSpan(name = "usecase.get.video.zip.output.stream")
     public ZipOutputStream getZipOutputStream(Video video) {
+        if (video == null)
+            throw new ProcessVideoException("O video não pode ser nulo para obtenção de um ZipOutputStream");
+
         var zipOutputStream = videoGateway.getZipOutputStream(video);
 
         if (zipOutputStream == null) {
