@@ -32,7 +32,7 @@ public class ProcessVideoController {
         Video video = null;
 
         try {
-            var videoUrl = blobCreatedCloudEventSchemaPayload.getData().getUrl();
+            var videoUrl = blobCreatedCloudEventSchemaPayload.data().url();
             video = getVideoUseCase.getVideo(videoUrl);
 
             downloadVideoToTempFileUseCase.downloadVideoToTempFile(video);
