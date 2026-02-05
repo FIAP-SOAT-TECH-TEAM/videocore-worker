@@ -25,14 +25,14 @@ public class ProcessVideoController {
     /**
      * Orquestra o fluxo de processamento de um vídeo recém-criado no blob storage. Capturando suas imagens e enviando para um destino
      *
-     * @param blobCreatedCloudEventSchemaPayload evento CloudEvent contendo dados do blob
+     * @param payload evento CloudEvent contendo dados do blob
      */
     @WithSpan(name = "controller.process.video")
-    public void processVideo(BlobCreatedCloudEventSchemaPayload blobCreatedCloudEventSchemaPayload) {
+    public void processVideo(BlobCreatedCloudEventSchemaPayload payload) {
         Video video = null;
 
         try {
-            var videoUrl = blobCreatedCloudEventSchemaPayload.data().url();
+            var videoUrl = payload.data().url();
             video = getVideoUseCase.getVideo(videoUrl);
 
             downloadVideoToTempFileUseCase.downloadVideoToTempFile(video);
