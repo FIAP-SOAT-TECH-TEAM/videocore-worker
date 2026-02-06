@@ -25,9 +25,10 @@ public class PublishVideoStatusProcessUpdateUseCase {
      * @param video           vídeo em processamento
      * @param currentPercent  percentual atual do processamento
      * @param imageMinute     Minuto em que a imagem foi capturada
+     * @param isError         Indica se a atualização no status do processamento se trata de um erro
      */
     @WithSpan(name = "usecase.publish.video.status.update.event")
-    public void publishVideoStatusProcessUpdate(Video video, Double currentPercent, long imageMinute) {
+    public void publishVideoStatusProcessUpdate(Video video, Double currentPercent, long imageMinute, boolean isError) {
         if (video == null)
             throw new ProcessVideoException("O video não pode ser nulo para publicação de evento");
 
@@ -38,7 +39,8 @@ public class PublishVideoStatusProcessUpdateUseCase {
                 imageMinute,
                 video.getMinuteFrameCut(),
                 currentPercent,
-                Instant.now()
+                Instant.now(),
+                isError
         );
 
         eventPublisherGateway.publishVideoStatusProcessUpdateEvent(event);

@@ -12,6 +12,7 @@ import java.time.Instant;
  * @param frameCutMinutes       Intervalo de corte de frames em minutos.
  * @param percentStatusProcess  Percentual do vídeo já processado.
  * @param reportTime            Momento em que o reporte foi realizado.
+ * @param isError               Indica se o reporte se trata de um erro.
  */
 public record ProcessVideoStatusUpdateEvent(
         String videoName,
@@ -20,5 +21,6 @@ public record ProcessVideoStatusUpdateEvent(
         long imageMinute,
         long frameCutMinutes,
         Double percentStatusProcess,
-        Instant reportTime
+        Instant reportTime,
+        boolean isError
 ) {}
