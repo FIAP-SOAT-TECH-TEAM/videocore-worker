@@ -3,10 +3,13 @@ plugins {
 	id 'org.springframework.boot' version '4.0.1'
 	id 'io.spring.dependency-management' version '1.1.7'
 	id 'org.graalvm.buildtools.native' version '0.11.3'
+    id 'co.uzzu.dotenv.gradle' version "4.0.0"
+    id 'jacoco'
+    id 'org.sonarqube' version '7.2.2.6593'
 }
 
 group = 'com.fiap.videocore'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.1'
 description = 'Microsserviço de processamento do video'
 
 java {
@@ -78,4 +81,81 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+    finalizedBy(jacocoTestReport)
+}
+
+sonar {
+    properties {
+        property 'sonar.projectKey', 'FIAP-SOAT-TECH-TEAM_videocore-worker'
+        property 'sonar.organization', 'fiap-soat-tech-team'
+        property 'sonar.projectName', 'videocore-worker'
+        property 'sonar.token', System.getenv("SONAR_CLOUD_TOKEN") ?: env.SONAR_CLOUD_TOKEN.value
+        property 'sonar.coverage.jacoco.xmlReportPaths', 'build/reports/jacoco/test/jacocoTestReport.xml'
+        property 'sonar.exclusions', [
+                // Application main class
+                '**/WorkerApplication.java',
+                // Configuration classes
+                '**/config/**',
+                '**/*Config.java',
+                '**/*Configuration.java',
+                '**/*Properties.java',
+                // Exceptions
+                "**/*exception*/**",
+                // DTOs and Request/Response classes
+                '**/dto/**',
+                '**/request/**',
+                '**/response/**',
+                '**/payload/**',
+                // MapStruct generated mappers
+                '**/mapper/**/*Impl.java',
+                '**/mapper/**/*MapperImpl*.java',
+                // Infrastructure adapters (controllers, repositories, etc.)
+                '**/infrastructure/in/**',
+                '**/infrastructure/out/**',
+                // Common infrastructure
+                '**/infrastructure/common/**',
+                // Common Observability
+                '**/common/observability/**',
+                // Package info files
+                '**/package-info.java'
+        ].join(',')
+        property 'sonar.test.exclusions', '**/fixtures/**'
+    }
+}
+
+jacocoTestReport {
+    reports {
+        xml.required = true
+        html.required = true
+    }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    // Application main class
+                    '**/WorkerApplication.java',
+                    // Configuration classes
+                    '**/config/**',
+                    '**/*Config.java',
+                    '**/*Configuration.java',
+                    '**/*Properties.java',
+                    // Exceptions
+                    "**/*exception*/**",
+                    // DTOs and Request/Response classes
+                    '**/dto/**',
+                    '**/request/**',
+                    '**/response/**',
+                    '**/payload/**',
+                    // MapStruct generated mappers
+                    '**/mapper/**/*Impl.java',
+                    '**/mapper/**/*MapperImpl*.java',
+                    // Infrastructure adapters (controllers, repositories, etc.)
+                    '**/infrastructure/in/**',
+                    '**/infrastructure/out/**',
+                    // Common infrastructure
+                    '**/infrastructure/common/**',
+                    // Package info files
+                    '**/package-info.java'
+            ])
+        }))
+    }
 }
