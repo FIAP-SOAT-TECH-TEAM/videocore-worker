@@ -7,7 +7,6 @@ SONAR_CLOUD_TOKEN=sonar_token
 
 # OTEL
 OTEL_GRPC_ENDPOINT=http://localhost:4320
-OTEL_HTTP_METRICS_ENDPOINT=http://localhost:4321/v1/metrics
 
 # Azure Service Bus
 AZ_SVC_BUS_CONNECTION_STRING=Endpoint=sb://localhost;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=SAS_KEY_VALUE;UseDevelopmentEmulator=true;
