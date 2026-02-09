@@ -1,5 +1,7 @@
 package com.soat.fiap.videocore.worker.core.application.usecase;
 
+import com.soat.fiap.videocore.worker.common.observability.log.CanonicalContext;
+import com.soat.fiap.videocore.worker.common.observability.trace.TraceContext;
 import com.soat.fiap.videocore.worker.common.observability.trace.WithSpan;
 import com.soat.fiap.videocore.worker.core.domain.event.ProcessVideoStatusUpdateEvent;
 import com.soat.fiap.videocore.worker.core.domain.exceptions.ProcessVideoException;
@@ -32,10 +34,13 @@ public class PublishVideoStatusProcessUpdateUseCase {
         if (video == null)
             throw new ProcessVideoException("O video não pode ser nulo para publicação de evento");
 
+        var currentTraceId = TraceContext.currentTraceId();
+
         var event = new ProcessVideoStatusUpdateEvent(
                 video.getVideoName(),
                 video.getUserId(),
                 video.getRequestId(),
+                currentTraceId,
                 imageMinute,
                 video.getMinuteFrameCut(),
                 currentPercent,

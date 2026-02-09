@@ -70,4 +70,24 @@ public class TraceContext {
             );
         }
     }
+
+    /**
+     * Recupera o traceId do span atualmente ativo.
+     *
+     * @return traceId atual ou string vazia se não houver tracing ativo
+     */
+    public static String currentTraceId() {
+        var span = currentSpan();
+
+        if (span == null)
+            return "";
+
+        var spanContext = span.getSpanContext();
+
+        if (!spanContext.isValid())
+            return "";
+
+        return spanContext.getTraceId();
+    }
+
 }
