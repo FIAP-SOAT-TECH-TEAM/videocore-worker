@@ -13,31 +13,31 @@ class MinuteFrameCutTest {
 
     @Test
     void shouldCreateValidMinuteFrameCut() {
-        // arrange
+        // Arrange
         long value = 1;
 
-        // act
+        // Act
         MinuteFrameCut minuteFrameCut = new MinuteFrameCut(value);
 
-        // assert
+        // Assert
         assertEquals(1, minuteFrameCut.value());
     }
 
     @Test
     void shouldThrowExceptionWhenMinuteFrameCutIsZero() {
-        // arrange
+        // Arrange
         long value = 0;
 
-        // act / assert
+        // Act & Assert
         assertThrows(VideoException.class, () -> new MinuteFrameCut(value));
     }
 
     @Test
     void shouldThrowExceptionWhenMinuteFrameCutIsNegative() {
-        // arrange
+        // Arrange
         long value = -5;
 
-        // act / assert
+        // Act & Assert
         assertThrows(VideoException.class, () -> new MinuteFrameCut(value));
     }
 }

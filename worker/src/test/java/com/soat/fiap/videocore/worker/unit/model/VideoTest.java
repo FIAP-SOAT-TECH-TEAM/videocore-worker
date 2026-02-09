@@ -17,53 +17,53 @@ class VideoTest {
 
     @Test
     void shouldCreateValidVideo() {
-        // arrange
+        // Arrange
         Video video = VideoFixture.validVideo();
 
-        // act
+        // Act
         String name = video.getVideoName();
 
-        // assert
+        // Assert
         assertEquals("video.mp4", name);
     }
 
     @Test
     void shouldThrowExceptionWhenVideoFileIsNull() {
-        // arrange
+        // Arrange
         Video video = VideoFixture.validVideo();
 
-        // act / assert
+        // Act & Assert
         assertThrows(VideoException.class, () -> video.setVideoFile(null));
     }
 
     @Test
     void shouldSetVideoFile() {
-        // arrange
+        // Arrange
         Video video = VideoFixture.validVideo();
         File file = new File("new.mp4");
 
-        // act
+        // Act
         video.setVideoFile(file);
 
-        // assert
+        // Assert
         assertEquals(file, video.getVideoFile());
     }
 
     @Test
     void shouldThrowExceptionWhenDurationIsNull() {
-        // arrange
+        // Arrange
         Video video = VideoFixture.validVideo();
 
-        // act / assert
+        // Act & Assert
         assertThrows(VideoException.class, () -> video.setDurationMinutes(null));
     }
 
     @Test
     void shouldThrowExceptionWhenFrameCutGreaterThanDuration() {
-        // arrange
+        // Arrange
         Video video = VideoFixture.validVideo();
 
-        // act / assert
+        // Act & Assert
         assertThrows(VideoException.class, () ->
                 video.setDurationMinutes(new DurationMinutes(1))
         );
@@ -71,20 +71,20 @@ class VideoTest {
 
     @Test
     void shouldSetDurationMinutes() {
-        // arrange
+        // Arrange
         Video video = VideoFixture.validVideo();
         DurationMinutes duration = new DurationMinutes(20);
 
-        // act
+        // Act
         video.setDurationMinutes(duration);
 
-        // assert
+        // Assert
         assertEquals(20, video.getDurationMinutes());
     }
 
     @Test
     void shouldReturnDefaultExtensionWhenNoExtension() {
-        // arrange
+        // Arrange
         Video video = new Video(
                 new com.soat.fiap.videocore.worker.core.domain.vo.VideoName("video"),
                 new File("video"),
@@ -94,48 +94,48 @@ class VideoTest {
                 new com.soat.fiap.videocore.worker.core.domain.vo.Metadata("u", "r")
         );
 
-        // act
+        // Act
         String ext = video.getVideoExtension();
 
-        // assert
+        // Assert
         assertEquals(".mp4", ext);
     }
 
     @Test
     void shouldReturnVideoExtension() {
-        // arrange
+        // Arrange
         Video video = VideoFixture.validVideo();
 
-        // act
+        // Act
         String ext = video.getVideoExtension();
 
-        // assert
+        // Assert
         assertEquals(".mp4", ext);
     }
 
     @Test
     void shouldReturnMetadataValues() {
-        // arrange
+        // Arrange
         Video video = VideoFixture.validVideo();
 
-        // act
+        // Act
         String userId = video.getUserId();
         String requestId = video.getRequestId();
 
-        // assert
+        // Assert
         assertEquals("user-1", userId);
         assertEquals("request-1", requestId);
     }
 
     @Test
     void shouldReturnMinuteFrameCut() {
-        // arrange
+        // Arrange
         Video video = VideoFixture.validVideo();
 
-        // act
+        // Act
         long cut = video.getMinuteFrameCut();
 
-        // assert
+        // Assert
         assertEquals(1, cut);
     }
 }

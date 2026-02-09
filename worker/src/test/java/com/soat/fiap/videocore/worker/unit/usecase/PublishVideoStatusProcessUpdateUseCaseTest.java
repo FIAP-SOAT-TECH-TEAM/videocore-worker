@@ -17,26 +17,26 @@ class PublishVideoStatusProcessUpdateUseCaseTest {
 
     @Test
     void shouldPublishEvent() {
-        // arrange
+        // Arrange
         EventPublisherGateway gateway = mock(EventPublisherGateway.class);
         PublishVideoStatusProcessUpdateUseCase useCase =
                 new PublishVideoStatusProcessUpdateUseCase(gateway);
         Video video = VideoFixture.validVideo();
 
-        // act
+        // Act
         useCase.publishVideoStatusProcessUpdate(video, 10.0, 1L, false);
 
-        // assert
+        // Assert
         verify(gateway).publishVideoStatusProcessUpdateEvent(any());
     }
 
     @Test
     void shouldThrowExceptionWhenVideoIsNull() {
-        // arrange
+        // Arrange
         PublishVideoStatusProcessUpdateUseCase useCase =
                 new PublishVideoStatusProcessUpdateUseCase(mock(EventPublisherGateway.class));
 
-        // act / assert
+        // Act & Assert
         assertThrows(ProcessVideoException.class,
                 () -> useCase.publishVideoStatusProcessUpdate(null, 10.0, 1L, false));
     }

@@ -22,7 +22,7 @@ class ProcessVideoUseCaseTest {
 
     @Test
     void shouldProcessVideoSuccessfully() throws IOException {
-        // arrange
+        // Arrange
         ProcessVideoGateway gateway = mock(ProcessVideoGateway.class);
         PublishVideoStatusProcessUpdateUseCase publishUseCase =
                 mock(PublishVideoStatusProcessUpdateUseCase.class);
@@ -31,21 +31,21 @@ class ProcessVideoUseCaseTest {
         ZipOutputStream zos = mock(ZipOutputStream.class);
         VideoProcessMetadataInput metadata = new VideoProcessMetadataInput();
 
-        // act
+        // Act
         useCase.processVideo(video, zos, metadata);
 
-        // assert
+        // Assert
         verify(gateway, atLeastOnce()).processVideo(any(), anyLong(), any(), any());
     }
 
     @Test
     void shouldThrowExceptionWhenVideoOrStreamIsNull() {
-        // arrange
+        // Arrange
         ProcessVideoUseCase useCase =
                 new ProcessVideoUseCase(mock(PublishVideoStatusProcessUpdateUseCase.class),
                         mock(ProcessVideoGateway.class));
 
-        // act / assert
+        // Act & Assert
         assertThrows(ProcessVideoException.class,
                 () -> useCase.processVideo(null, null, new VideoProcessMetadataInput()));
     }

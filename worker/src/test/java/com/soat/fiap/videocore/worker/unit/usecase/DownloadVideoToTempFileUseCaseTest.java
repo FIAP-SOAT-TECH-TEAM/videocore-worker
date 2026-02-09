@@ -20,40 +20,40 @@ class DownloadVideoToTempFileUseCaseTest {
 
     @Test
     void shouldDownloadVideoToTempFile() throws IOException {
-        // arrange
+        // Arrange
         FileGateway fileGateway = mock(FileGateway.class);
         File file = new File("temp.mp4");
         when(fileGateway.downloadTempFileFromInputStream(any(), any(), any())).thenReturn(file);
         DownloadVideoToTempFileUseCase useCase = new DownloadVideoToTempFileUseCase(fileGateway);
         Video video = VideoFixture.validVideo();
 
-        // act
+        // Act
         useCase.downloadVideoToTempFile(video);
 
-        // assert
+        // Assert
         assertEquals(file, video.getVideoFile());
     }
 
     @Test
     void shouldThrowExceptionWhenVideoIsNull() {
-        // arrange
+        // Arrange
         DownloadVideoToTempFileUseCase useCase =
                 new DownloadVideoToTempFileUseCase(mock(FileGateway.class));
 
-        // act / assert
+        // Act & Assert
         assertThrows(ProcessVideoException.class, () -> useCase.downloadVideoToTempFile(null));
     }
 
     @Test
     void shouldThrowExceptionWhenIOExceptionOccurs() throws IOException {
-        // arrange
+        // Arrange
         FileGateway fileGateway = mock(FileGateway.class);
         when(fileGateway.downloadTempFileFromInputStream(any(), any(), any()))
                 .thenThrow(new IOException());
         DownloadVideoToTempFileUseCase useCase = new DownloadVideoToTempFileUseCase(fileGateway);
         Video video = VideoFixture.validVideo();
 
-        // act / assert
+        // Act & Assert
         assertThrows(ProcessVideoException.class, () -> useCase.downloadVideoToTempFile(video));
     }
 }

@@ -19,39 +19,39 @@ class GetZipOutputStreamUseCaseTest {
 
     @Test
     void shouldReturnZipOutputStream() {
-        // arrange
+        // Arrange
         VideoGateway gateway = mock(VideoGateway.class);
         ZipOutputStream zos = mock(ZipOutputStream.class);
         when(gateway.getZipOutputStream(any())).thenReturn(zos);
         GetZipOutputStreamUseCase useCase = new GetZipOutputStreamUseCase(gateway);
         Video video = VideoFixture.validVideo();
 
-        // act
+        // Act
         ZipOutputStream result = useCase.getZipOutputStream(video);
 
-        // assert
+        // Assert
         assertEquals(zos, result);
     }
 
     @Test
     void shouldThrowExceptionWhenVideoIsNull() {
-        // arrange
+        // Arrange
         GetZipOutputStreamUseCase useCase =
                 new GetZipOutputStreamUseCase(mock(VideoGateway.class));
 
-        // act / assert
+        // Act & Assert
         assertThrows(ProcessVideoException.class, () -> useCase.getZipOutputStream(null));
     }
 
     @Test
     void shouldThrowExceptionWhenZipIsNull() {
-        // arrange
+        // Arrange
         VideoGateway gateway = mock(VideoGateway.class);
         when(gateway.getZipOutputStream(any())).thenReturn(null);
         GetZipOutputStreamUseCase useCase = new GetZipOutputStreamUseCase(gateway);
         Video video = VideoFixture.validVideo();
 
-        // act / assert
+        // Act & Assert
         assertThrows(ProcessVideoException.class, () -> useCase.getZipOutputStream(video));
     }
 }

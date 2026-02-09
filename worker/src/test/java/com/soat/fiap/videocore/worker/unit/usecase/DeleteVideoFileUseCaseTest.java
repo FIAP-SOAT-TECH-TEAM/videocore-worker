@@ -19,40 +19,40 @@ class DeleteVideoFileUseCaseTest {
 
     @Test
     void shouldDeleteVideoFileWhenPresent() throws IOException {
-        // arrange
+        // Arrange
         FileGateway fileGateway = mock(FileGateway.class);
         DeleteVideoFileUseCase useCase = new DeleteVideoFileUseCase(fileGateway);
         Video video = VideoFixture.validVideo();
 
-        // act
+        // Act
         useCase.deleteVideoFile(video);
 
-        // assert
+        // Assert
         verify(fileGateway).deleteFileIfExists(video.getVideoFile());
     }
 
     @Test
     void shouldNotFailWhenVideoIsNull() {
-        // arrange
+        // Arrange
         FileGateway fileGateway = mock(FileGateway.class);
         DeleteVideoFileUseCase useCase = new DeleteVideoFileUseCase(fileGateway);
 
-        // act
+        // Act
         useCase.deleteVideoFile(null);
 
-        // assert
+        // Assert
         verifyNoInteractions(fileGateway);
     }
 
     @Test
     void shouldThrowProcessVideoExceptionWhenGatewayFails() throws IOException {
-        // arrange
+        // Arrange
         FileGateway fileGateway = mock(FileGateway.class);
         doThrow(new RuntimeException()).when(fileGateway).deleteFileIfExists(any());
         DeleteVideoFileUseCase useCase = new DeleteVideoFileUseCase(fileGateway);
         Video video = VideoFixture.validVideo();
 
-        // act / assert
+        // Act & Assert
         assertThrows(ProcessVideoException.class, () -> useCase.deleteVideoFile(video));
     }
 }

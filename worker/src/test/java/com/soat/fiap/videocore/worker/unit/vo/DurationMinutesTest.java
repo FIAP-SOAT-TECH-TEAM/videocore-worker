@@ -13,31 +13,31 @@ class DurationMinutesTest {
 
     @Test
     void shouldCreateValidDurationMinutes() {
-        // arrange
+        // Arrange
         long value = 10;
 
-        // act
+        // Act
         DurationMinutes durationMinutes = new DurationMinutes(value);
 
-        // assert
+        // Assert
         assertEquals(10, durationMinutes.value());
     }
 
     @Test
     void shouldThrowExceptionWhenDurationIsZero() {
-        // arrange
+        // Arrange
         long value = 0;
 
-        // act / assert
+        // Act & Assert
         assertThrows(VideoException.class, () -> new DurationMinutes(value));
     }
 
     @Test
     void shouldThrowExceptionWhenDurationIsNegative() {
-        // arrange
+        // Arrange
         long value = -1;
 
-        // act / assert
+        // Act & Assert
         assertThrows(VideoException.class, () -> new DurationMinutes(value));
     }
 }

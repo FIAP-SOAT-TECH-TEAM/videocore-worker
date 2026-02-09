@@ -20,7 +20,7 @@ class ProcessVideoControllerTest {
 
     @Test
     void shouldProcessVideoSuccessfully() {
-        // arrange
+        // Arrange
         GetVideoUseCase getVideoUseCase = mock(GetVideoUseCase.class);
         GetZipOutputStreamUseCase getZipOutputStreamUseCase = mock(GetZipOutputStreamUseCase.class);
         DownloadVideoToTempFileUseCase downloadVideoToTempFileUseCase = mock(DownloadVideoToTempFileUseCase.class);
@@ -51,10 +51,10 @@ class ProcessVideoControllerTest {
         when(getVideoUseCase.getVideo(any())).thenReturn(video);
         when(getZipOutputStreamUseCase.getZipOutputStream(video)).thenReturn(zipOutputStream);
 
-        // act
+        // Act
         controller.processVideo(payload);
 
-        // assert
+        // Assert
         verify(getVideoUseCase).getVideo("video-url");
         verify(downloadVideoToTempFileUseCase).downloadVideoToTempFile(video);
         verify(getVideoDurationMinutesUseCase).getVideoDurationMinutes(video);
@@ -67,7 +67,7 @@ class ProcessVideoControllerTest {
 
     @Test
     void shouldPublishErrorEventAndDeleteFileWhenExceptionOccurs() {
-        // arrange
+        // Arrange
         GetVideoUseCase getVideoUseCase = mock(GetVideoUseCase.class);
         GetZipOutputStreamUseCase getZipOutputStreamUseCase = mock(GetZipOutputStreamUseCase.class);
         DownloadVideoToTempFileUseCase downloadVideoToTempFileUseCase = mock(DownloadVideoToTempFileUseCase.class);
@@ -98,13 +98,13 @@ class ProcessVideoControllerTest {
         doThrow(new RuntimeException("erro"))
                 .when(downloadVideoToTempFileUseCase).downloadVideoToTempFile(video);
 
-        // act
+        // Act
         RuntimeException exception = assertThrows(
                 RuntimeException.class,
                 () -> controller.processVideo(payload)
         );
 
-        // assert
+        // Assert
         assertEquals("erro", exception.getMessage());
         verify(publishVideoStatusProcessUpdateUseCase)
                 .publishVideoStatusProcessUpdate(eq(video), any(), anyLong(), eq(true));
@@ -113,7 +113,7 @@ class ProcessVideoControllerTest {
 
     @Test
     void shouldPublishErrorEventWhenExceptionOccursBeforeVideoIsLoaded() {
-        // arrange
+        // Arrange
         GetVideoUseCase getVideoUseCase = mock(GetVideoUseCase.class);
         GetZipOutputStreamUseCase getZipOutputStreamUseCase = mock(GetZipOutputStreamUseCase.class);
         DownloadVideoToTempFileUseCase downloadVideoToTempFileUseCase = mock(DownloadVideoToTempFileUseCase.class);
@@ -140,13 +140,13 @@ class ProcessVideoControllerTest {
         when(data.url()).thenReturn("video-url");
         when(getVideoUseCase.getVideo(any())).thenThrow(new RuntimeException("erro"));
 
-        // act
+        // Act
         RuntimeException exception = assertThrows(
                 RuntimeException.class,
                 () -> controller.processVideo(payload)
         );
 
-        // assert
+        // Assert
         assertEquals("erro", exception.getMessage());
         verify(publishVideoStatusProcessUpdateUseCase)
                 .publishVideoStatusProcessUpdate(isNull(), any(), anyLong(), eq(true));

@@ -17,38 +17,38 @@ class GetVideoDurationMinutesUseCaseTest {
 
     @Test
     void shouldSetVideoDurationMinutes() {
-        // arrange
+        // Arrange
         ProcessVideoGateway gateway = mock(ProcessVideoGateway.class);
         when(gateway.getVideoDurationMinutes(any())).thenReturn(20L);
         GetVideoDurationMinutesUseCase useCase = new GetVideoDurationMinutesUseCase(gateway);
         Video video = VideoFixture.validVideo();
 
-        // act
+        // Act
         useCase.getVideoDurationMinutes(video);
 
-        // assert
+        // Assert
         assertEquals(20, video.getDurationMinutes());
     }
 
     @Test
     void shouldThrowExceptionWhenVideoIsNull() {
-        // arrange
+        // Arrange
         GetVideoDurationMinutesUseCase useCase =
                 new GetVideoDurationMinutesUseCase(mock(ProcessVideoGateway.class));
 
-        // act / assert
+        // Act & Assert
         assertThrows(ProcessVideoException.class, () -> useCase.getVideoDurationMinutes(null));
     }
 
     @Test
     void shouldThrowExceptionWhenGatewayFails() {
-        // arrange
+        // Arrange
         ProcessVideoGateway gateway = mock(ProcessVideoGateway.class);
         when(gateway.getVideoDurationMinutes(any())).thenThrow(IllegalStateException.class);
         GetVideoDurationMinutesUseCase useCase = new GetVideoDurationMinutesUseCase(gateway);
         Video video = VideoFixture.validVideo();
 
-        // act / assert
+        // Act & Assert
         assertThrows(ProcessVideoException.class, () -> useCase.getVideoDurationMinutes(video));
     }
 }
