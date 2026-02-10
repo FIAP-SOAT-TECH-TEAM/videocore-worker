@@ -25,11 +25,6 @@
     description = "Chave do arquivo tfstate do videocore-infra"
   }
 
-  variable "videocore-backend-auth-key" {
-    type        = string
-    description = "Chave do arquivo tfstate do videocore-auth"
-  }
-
 # HELM
 
   variable "release_name" {

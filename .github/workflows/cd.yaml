@@ -54,19 +54,7 @@ jobs:
           check_artifacts: true
           name_is_regexp: false
           if_no_artifact_found: fail
-          path: terraform
-    
-      - name: Download artifacts - OpenApi File
-        uses: dawidd6/action-download-artifact@v11
-        with:
-          name: openapi
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          workflow: ci.yaml
-          workflow_search: true
-          check_artifacts: true
-          name_is_regexp: false
-          if_no_artifact_found: fail
-          path: build/openapi     
+          path: terraform    
 
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan
