@@ -1,6 +1,6 @@
 apiVersion: v2
 name: videocore-worker
-description: Worker de processamento de vídeos, desenvolvido com Clean Architecture, DDD e microsserviços.
+description: Microsserviço de processamento de vídeos, desenvolvido com Clean Architecture, DDD e microsserviços.
 
 # A chart can be either an 'application' or a 'library' chart.
 #
