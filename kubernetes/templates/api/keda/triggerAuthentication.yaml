@@ -1,0 +1,10 @@
+apiVersion: keda.sh/v1alpha1
+kind: TriggerAuthentication
+metadata:
+  name: {{ include "api.fullname" . }}-trigger-auth
+  namespace: {{ .Values.namespace.api.name }}
+spec:
+  secretTargetRef:
+    - parameter: connection
+      name: {{ include "api.fullname" . }}-secrets
+      key: AZ_SVC_BUS_CONNECTION_STRING

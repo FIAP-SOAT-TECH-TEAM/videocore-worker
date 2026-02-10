@@ -1,0 +1,5 @@
+📽️ Video Core Worker - Helm Chart Deployment
+
+🎯 Implementado com Clean Architecture e DDD
+
+📖 Documentação completa: https://github.com/FIAP-SOAT-TECH-TEAM/videocore-worker
