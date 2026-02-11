@@ -149,10 +149,10 @@ jobs:
       - name: Build and Push Package Helm Chart
         run: |
           CHART_VERSION="0.1.${{ github.run_number }}"
-          sed -i "s/^version:.*/version: $CHART_VERSION/" kubernetes/videocore-worker/Chart.yaml
-          sed -i "s/^appVersion:.*/appVersion: $CHART_VERSION/" kubernetes/videocore-worker/Chart.yaml
-          helm dependency update kubernetes/videocore-worker
-          helm package kubernetes/videocore-worker -d ./charts
+          sed -i "s/^version:.*/version: $CHART_VERSION/" kubernetes/Chart.yaml
+          sed -i "s/^appVersion:.*/appVersion: $CHART_VERSION/" kubernetes/Chart.yaml
+          helm dependency update kubernetes
+          helm package kubernetes -d ./charts
           ACR_NAME=${{ needs.infra-info.outputs.acr_login_server }}
           helm push ./charts/videocore-worker-*.tgz oci://$ACR_NAME/helm
 
