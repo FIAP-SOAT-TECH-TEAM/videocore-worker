@@ -6,7 +6,6 @@ import com.soat.fiap.videocore.worker.core.domain.exceptions.ProcessVideoExcepti
 import com.soat.fiap.videocore.worker.core.domain.model.Video;
 import com.soat.fiap.videocore.worker.core.interfaceadapters.gateway.ProcessVideoGateway;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.zip.ZipOutputStream;
@@ -15,7 +14,6 @@ import java.util.zip.ZipOutputStream;
  * Caso de uso responsável por processar um vídeo e extrair frames
  * em intervalos fixos de tempo, exportando-os como imagens em um ZIP.
  */
-@Slf4j
 @Component
 @RequiredArgsConstructor
 public class ProcessVideoUseCase {
