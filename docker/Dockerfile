@@ -19,7 +19,7 @@ COPY worker/src/ ./src/
 # Construir o aplicativo AOT (native image)
 # Considerações sobre o Build Time: https://www.graalvm.org/latest/reference-manual/native-image/overview/BuildOutput/#graal-compiler (-O2 Default - Performance Produção)
 RUN ./gradlew nativeCompile \
-  # https://github.com/spring-projects/spring-framework/issues/29019
+  # https://github.com/Azure/azure-sdk-for-java/blob/main/sdk/spring/README.md#spring-boot-3-support
   --build-args="-J-Djava.security.properties=/app/custom_security/custom.security" \
   #https://github.com/Azure/azure-sdk-for-java/issues/34775
   --build-args="--initialize-at-build-time=org.slf4j.helpers,org.slf4j.LoggerFactory,ch.qos.logback,com.fasterxml.jackson,net.logstash.logback,org.yaml.snakeyaml,tools.jackson.core.util" \

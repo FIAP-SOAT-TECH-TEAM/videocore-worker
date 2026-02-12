@@ -9,8 +9,6 @@ spring:
   profiles:
     active: local
 
-  # Mensageria
-  # https://github.com/Azure/azure-sdk-for-java/issues/43106
   cloud:
     azure:
       servicebus:
@@ -29,7 +27,6 @@ server:
     include-message: always
     include-binding-errors: always
 
-# Observabilidade
 management:
   otlp:
     metrics:
@@ -46,7 +43,6 @@ management:
       exposure:
         include: health, info, metrics
 
-# Observabilidade
 otel:
   instrumentation:
     micrometer:
@@ -63,7 +59,6 @@ otel:
         endpoint: ${OTEL_GRPC_ENDPOINT:}
         protocol: grpc
 
-# Azure
 azure:
   blob-storage:
     connection-string: ${AZURE_BLOB_STORAGE_CONNECTION_STRING:}
