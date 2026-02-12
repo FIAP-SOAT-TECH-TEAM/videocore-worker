@@ -41,7 +41,13 @@ public class ProcessHandler {
 
             log.info("request_completed");
         } catch (JsonProcessingException e) {
+            log.error("request_error", e);
+
             throw new ServiceBusSerializationException("Erro ao desserializar evento", e);
+        } catch (Exception e) {
+            log.error("request_error", e);
+
+            throw e;
         } finally {
             CanonicalContext.clear();
         }
