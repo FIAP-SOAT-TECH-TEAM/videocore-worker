@@ -1,0 +1,23 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: {{ include "api.fullname" . }}-scaledobject
+  namespace: {{ .Values.namespace.api.name }}
+spec:
+  scaleTargetRef:
+    name: {{ include "api.fullname" . }}-deployment
+
+  minReplicaCount: {{ .Values.api.hpa.minReplicas }}
+  maxReplicaCount: {{ .Values.api.hpa.maxReplicas }}
+
+  pollingInterval: 30
+  cooldownPeriod: 300
+
+  triggers:
+    - type: azure-servicebus
+      metadata:
+        queueName: {{ .Values.api.keda.serviceBus.queueName }}
+        namespace: {{ .Values.api.keda.serviceBus.namespace }}
+        messageCount: "{{ .Values.api.keda.serviceBus.messageCount }}"
+      authenticationRef:
+        name: {{ include "api.fullname" . }}-trigger-auth

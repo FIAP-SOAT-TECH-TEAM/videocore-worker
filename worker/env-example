@@ -1,0 +1,17 @@
+# SERVER
+SERVER_ADDRESS=0.0.0.0
+SERVER_PORT=8080
+
+# SONAR
+SONAR_CLOUD_TOKEN=sonar_token
+
+# OTEL
+OTEL_GRPC_ENDPOINT=http://localhost:4320
+
+# Azure Service Bus
+AZ_SVC_BUS_CONNECTION_STRING=Endpoint=sb://localhost;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=SAS_KEY_VALUE;UseDevelopmentEmulator=true;
+
+# Azure Blob Storage
+AZURE_BLOB_STORAGE_CONNECTION_STRING=DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://localhost:10000/devstoreaccount1;
+AZURE_BLOB_STORAGE_VIDEO_CONTAINER_NAME=videos
+AZURE_BLOB_STORAGE_IMAGE_CONTAINER_NAME=images
