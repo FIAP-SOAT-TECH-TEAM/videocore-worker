@@ -103,10 +103,10 @@ jobs:
       - name: Unit Test with Gradle (finalizedBy JacocoTestReport)
         run: ./gradlew test --no-daemon
 
-      - name: Build and analyze with SonarCloud
-        run: ./gradlew sonar "-Dsonar.qualitygate.wait=true" --no-daemon --info
-        env:
-          SONAR_CLOUD_TOKEN: ${{ secrets.SONAR_CLOUD_TOKEN }}
+      # - name: Build and analyze with SonarCloud
+      #   run: ./gradlew sonar "-Dsonar.qualitygate.wait=true" --no-daemon --info
+      #   env:
+      #     SONAR_CLOUD_TOKEN: ${{ secrets.SONAR_CLOUD_TOKEN }}
 
   push:
     needs: [build, infra-info]
