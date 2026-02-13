@@ -1,6 +1,8 @@
 namespace:
   api:
     name: replaced
+  monitor:
+    name: replaced
     
 api:
   name: worker
@@ -43,10 +45,7 @@ api:
       queueName: "replaced"
       namespace: "replaced"
       messageCount: 5
-
-  otel:
-    grpcEndpoint: "nr-k8s-otel-collector-gateway:4317"
-
+      
 secrets:
   azureKeyVault:
     keyVaultName: "replaced"
