@@ -1,4 +1,4 @@
-package com.soat.fiap.videocore.reports.common.hints.azure;
+package com.soat.fiap.videocore.worker.common.hints.azure;
 
 import org.springframework.aot.hint.MemberCategory;
 import org.springframework.aot.hint.RuntimeHints;
