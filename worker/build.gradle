@@ -89,7 +89,7 @@ tasks.named('test') {
 sonar {
     properties {
         property 'sonar.projectKey', 'FIAP-SOAT-TECH-TEAM_videocore-worker'
-        property 'sonar.organization', 'fiap-soat-tech-team'
+        property 'sonar.organization', 'fiap-soat-8-tech-team'
         property 'sonar.projectName', 'videocore-worker'
         property 'sonar.token', System.getenv("SONAR_CLOUD_TOKEN") ?: env.SONAR_CLOUD_TOKEN.value
         property 'sonar.coverage.jacoco.xmlReportPaths', 'build/reports/jacoco/test/jacocoTestReport.xml'
