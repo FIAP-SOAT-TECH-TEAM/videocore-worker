@@ -28,18 +28,22 @@ RUN ./gradlew nativeCompile \
   --no-daemon
 
 # Imagem final
-FROM alpine:3.20 AS runtime
+# https://github.com/bytedeco/javacv/issues/2212
+FROM debian:12-slim AS runtime
 WORKDIR /app
 
 # Adicionar ferramentas básicas para health checks
-RUN apk add --no-cache curl wget tzdata libc6-compat
+RUN apt-get update && \
+    apt-get install -y curl wget tzdata && \
+    rm -rf /var/lib/apt/lists/*
 
 # Definir timezone para GMT-3 (America/Sao_Paulo)
-RUN cp /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime && \
+RUN ln -sf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime && \
     echo "America/Sao_Paulo" > /etc/timezone
 
 # Adicionar usuário não-root para segurança
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+RUN addgroup --system appgroup && \
+    adduser --system --ingroup appgroup appuser
 
 # Copiar binário nativo gerado pelo GraalVM
 COPY --chmod=0755 --from=build /app/build/native/nativeCompile/* worker
