@@ -15,6 +15,11 @@ resource "helm_release" "videocore_worker" {
   }
 
   set {
+    name  = "namespace.monitor.name"
+    value = data.terraform_remote_state.infra.outputs.aks_monitor_namespace_name
+  }
+
+  set {
     name  = "api.image.repository"
     value = var.docker_image_uri
   }

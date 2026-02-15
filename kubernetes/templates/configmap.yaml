@@ -9,4 +9,4 @@ data:
   SERVER_ADDRESS: {{ .Values.api.server.address | quote }}
   SERVER_PORT: {{ .Values.api.server.port | quote }}
   SPRING_PROFILES_ACTIVE: {{ .Values.api.server.profilesActive | quote }}
-  OTEL_GRPC_ENDPOINT: {{ .Values.api.otel.grpcEndpoint | quote }}
+  OTEL_GRPC_ENDPOINT: "http://videocore-nr-otel-opentelemetry-collector.{{ .Values.namespace.monitor.name }}.svc.cluster.local:4317"
