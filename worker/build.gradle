@@ -118,6 +118,8 @@ sonar {
                 '**/infrastructure/common/**',
                 // Common Observability
                 '**/common/observability/**',
+                // Graal VM Hints
+                '**/common/hints/**',
                 // Package info files
                 '**/package-info.java'
         ].join(',')
@@ -155,6 +157,10 @@ jacocoTestReport {
                     '**/infrastructure/out/**',
                     // Common infrastructure
                     '**/infrastructure/common/**',
+                    // Common Observability
+                    '**/common/observability/**',
+                    // Graal VM Hints
+                    '**/common/hints/**',
                     // Package info files
                     '**/package-info.java'
             ])
