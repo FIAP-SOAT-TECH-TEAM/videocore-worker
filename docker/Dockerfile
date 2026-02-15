@@ -25,16 +25,14 @@ RUN ./gradlew nativeCompile \
   --build-args="-J-Djava.security.properties=/app/custom_security/custom.security" \
   # https://github.com/Azure/azure-sdk-for-java/issues/34775
   --build-args="--initialize-at-build-time=org.slf4j.helpers,org.slf4j.LoggerFactory,ch.qos.logback,com.fasterxml.jackson,net.logstash.logback,org.yaml.snakeyaml,tools.jackson.core.util" \
-  # https://github.com/oracle/graal/issues/6549
-  --build-args="-H:ExcludeResources=.*\.so|.*\.dll|.*\.dylib" \
   --no-daemon
 
 # Imagem final
 FROM alpine:3.20 AS runtime
 WORKDIR /app
 
-# Adicionar ferramentas básicas para health checks e OpenCV
-RUN apk add --no-cache curl wget tzdata libc6-compat gcompat libstdc++ opencv
+# Adicionar ferramentas básicas para health checks
+RUN apk add --no-cache curl wget tzdata libc6-compat
 
 # Definir timezone para GMT-3 (America/Sao_Paulo)
 RUN cp /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime && \
@@ -55,9 +53,6 @@ EXPOSE 9090
 # Verificação de saúde interna
 HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
   CMD wget --spider -q http://localhost:9090/actuator/health || exit 1
-
-# Define onde a aplicação deve procurar pelas libs nativas externas
-ENV LD_LIBRARY_PATH=/usr/lib:/lib:/app/libs
 
 # Iniciar aplicação nativa
 ENTRYPOINT ["/app/worker"]
