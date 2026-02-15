@@ -28,6 +28,7 @@ ext {
     set('mapStructVersion', "1.6.3")
     set('logstashEncoderVersion', "9.0")
     set('javaCvVersion', "1.5.12")
+    set('azureBlobSdkVersion', "12.31.2")
 
     set('openTelBomVersion', "1.58.0")
     set('openTelInstBomVersion', "2.23.0-alpha")
@@ -59,7 +60,8 @@ dependencies {
     implementation('com.azure.spring:spring-cloud-azure-starter-servicebus'){
         exclude group: 'com.azure.spring', module: 'spring-cloud-azure-autoconfigure'
     }
-    implementation 'com.azure:azure-storage-blob'
+    // https://stackoverflow.com/questions/75252848/azure-storage-blobs-support-for-localdevelopment-throws-the-value-for-one-of-the
+    implementation "com.azure:azure-storage-blob:${azureBlobSdkVersion}"
 
     // AOP
     implementation 'org.springframework.boot:spring-boot-starter-aspectj'
