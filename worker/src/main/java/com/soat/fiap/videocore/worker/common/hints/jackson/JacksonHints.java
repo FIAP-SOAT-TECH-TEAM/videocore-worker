@@ -20,6 +20,8 @@ import org.springframework.aot.hint.RuntimeHintsRegistrar;
  * {@code
  * @RegisterReflectionForBinding({
  *     BlobCreatedCloudEventSchemaPayload.class,
+ *     BlobCreatedCloudEventSchemaPayload.DataPayload.class,
+ *     BlobCreatedCloudEventSchemaPayload.DataPayload.StorageDiagnostics.class,
  *     ProcessVideoStatusUpdateEventDto.class
  * })
  * }
@@ -42,6 +44,8 @@ public class JacksonHints implements RuntimeHintsRegistrar {
     @Override
     public void registerHints(RuntimeHints hints, ClassLoader classLoader) {
         registerForBinding(hints, BlobCreatedCloudEventSchemaPayload.class);
+        registerForBinding(hints, BlobCreatedCloudEventSchemaPayload.DataPayload.class);
+        registerForBinding(hints, BlobCreatedCloudEventSchemaPayload.DataPayload.StorageDiagnostics.class);
         registerForBinding(hints, ProcessVideoStatusUpdateEventDto.class);
     }
 
