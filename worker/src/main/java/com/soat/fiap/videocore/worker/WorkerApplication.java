@@ -1,16 +1,13 @@
 package com.soat.fiap.videocore.worker;
 
 import com.soat.fiap.videocore.worker.common.hints.azure.BlobHints;
-import com.soat.fiap.videocore.worker.core.interfaceadapters.dto.ProcessVideoStatusUpdateEventDto;
-import com.soat.fiap.videocore.worker.infrastructure.in.event.azsvcbus.payload.BlobCreatedCloudEventSchemaPayload;
-import org.springframework.aot.hint.annotation.RegisterReflectionForBinding;
+import com.soat.fiap.videocore.worker.common.hints.jackson.JacksonHints;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ImportRuntimeHints;
 
 @SpringBootApplication
-@ImportRuntimeHints(BlobHints.class)
-@RegisterReflectionForBinding({BlobCreatedCloudEventSchemaPayload.class, ProcessVideoStatusUpdateEventDto.class})
+@ImportRuntimeHints({BlobHints.class, JacksonHints.class})
 public class WorkerApplication {
 
     static void main(String[] args) {
