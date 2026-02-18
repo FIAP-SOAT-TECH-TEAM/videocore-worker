@@ -1,4 +1,4 @@
-FROM ghcr.io/graalvm/native-image-community:25 AS build
+FROM ghcr.io/graalvm/native-image-community:latest AS build
 WORKDIR /app
 
 # Copiar arquivos de dependências e build
@@ -19,6 +19,7 @@ COPY worker/src/ ./src/
 # Construir o aplicativo AOT (native image)
 # Considerações sobre o Build Time: https://www.graalvm.org/latest/reference-manual/native-image/overview/BuildOutput/#graal-compiler (-O2 Default - Performance Produção)
 RUN ./gradlew nativeCompile \
+  --no-fallback \
   # https://github.com/bytedeco/gradle-javacpp?tab=readme-ov-file#the-platform-plugin
   -PjavacppPlatform=linux-x86_64 \
   # https://github.com/Azure/azure-sdk-for-java/blob/main/sdk/spring/README.md#spring-boot-3-support
@@ -32,10 +33,13 @@ RUN ./gradlew nativeCompile \
 FROM debian:12-slim AS runtime
 WORKDIR /app
 
-# Adicionar ferramentas básicas para health checks
+# Adicionar ferramentas básicas + libs X11 necessárias ao AWT
 RUN apt-get update && \
-    apt-get install -y curl wget tzdata && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get install -y \
+        curl \
+        wget \
+        tzdata \
+    && rm -rf /var/lib/apt/lists/*
 
 # Definir timezone para GMT-3 (America/Sao_Paulo)
 RUN ln -sf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime && \
@@ -45,7 +49,8 @@ RUN ln -sf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime && \
 RUN addgroup --system appgroup && \
     adduser --system --ingroup appgroup appuser
 
-# Copiar binário nativo gerado pelo GraalVM
+# Copiar binários nativos gerados pelo GraalVM
+COPY --from=build /app/build/native/nativeCompile/lib*.so /usr/lib/
 COPY --chmod=0755 --from=build /app/build/native/nativeCompile/* worker
 
 # Mudar para usuário não-root
