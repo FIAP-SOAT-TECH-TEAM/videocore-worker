@@ -16,6 +16,9 @@ RUN microdnf install -y findutils
 # Copiar código fonte
 COPY worker/src/ ./src/
 
+# Copiar configuração do Spotless
+COPY worker/spotless-formatter.xml ./
+
 # Construir o aplicativo AOT (native image)
 # Considerações sobre o Build Time: https://www.graalvm.org/latest/reference-manual/native-image/overview/BuildOutput/#graal-compiler (-O2 Default - Performance Produção)
 RUN ./gradlew nativeCompile \
