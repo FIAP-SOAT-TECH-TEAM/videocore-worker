@@ -154,14 +154,14 @@ cd build/libs
 Execute:
 
 ```
-java -agentlib:native-image-agent=config-output-dir=../../src/main/resources/META-INF/native-image/ -jar worker-0.0.1.jar
+java -agentlib:native-image-agent=config-merge-dir=../../src/main/resources/META-INF/native-image/ -jar worker-0.0.1.jar
 ```
 > ⚠️ O arquivo de variáveis de ambiente utilizado em tempo de desenvolvimento com o profile `local`, presente na raiz do projeto, deve ser copiado para cá antes da execução. Logo, o ambiente de desenvolvimento (fornecido pelos scripts bash) precisa estar funcionando.
 
 Parâmetro utilizado:
 
 ```
--agentlib:native-image-agent=config-output-dir=<diretório>
+-agentlib:native-image-agent=config-merge-dir=<diretório>
 ```
 
 Esse parâmetro:
