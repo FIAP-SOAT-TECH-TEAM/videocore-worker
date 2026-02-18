@@ -28,7 +28,7 @@ RUN ./gradlew nativeCompile \
   # https://github.com/Azure/azure-sdk-for-java/blob/main/sdk/spring/README.md#spring-boot-3-support
   --build-args="-J-Djava.security.properties=/app/custom_security/custom.security" \
   # https://github.com/Azure/azure-sdk-for-java/issues/34775
-  --build-args="--initialize-at-build-time=org.slf4j.helpers,org.slf4j.LoggerFactory,ch.qos.logback,com.fasterxml.jackson,net.logstash.logback,org.yaml.snakeyaml,tools.jackson.core.util" \
+  --build-args="--initialize-at-build-time=org.slf4j.helpers,org.slf4j.LoggerFactory,ch.qos.logback,com.fasterxml.jackson,net.logstash.logback,org.yaml.snakeyaml,tools.jackson.core.util,org.codehaus.stax2.typed.Base64Variant" \
   --no-daemon
 
 # Imagem final
