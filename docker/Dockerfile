@@ -33,7 +33,7 @@ RUN ./gradlew nativeCompile \
 FROM debian:12-slim AS runtime
 WORKDIR /app
 
-# Adicionar ferramentas básicas + libs X11 necessárias ao AWT
+# Adicionar ferramentas básicas
 RUN apt-get update && \
     apt-get install -y \
         curl \
