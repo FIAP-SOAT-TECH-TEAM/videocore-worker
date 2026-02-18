@@ -3,10 +3,11 @@ plugins {
 	id 'org.springframework.boot' version '4.0.1'
 	id 'io.spring.dependency-management' version '1.1.7'
 	id 'org.graalvm.buildtools.native' version '0.11.3'
-    id 'co.uzzu.dotenv.gradle' version "4.0.0"
-    id 'jacoco'
-    id 'org.sonarqube' version '7.2.2.6593'
-    id 'org.bytedeco.gradle-javacpp-platform' version '1.5.10'
+	id 'co.uzzu.dotenv.gradle' version "4.0.0"
+	id 'jacoco'
+	id 'org.sonarqube' version '7.2.2.6593'
+	id 'org.bytedeco.gradle-javacpp-platform' version '1.5.10'
+	id 'com.diffplug.spotless' version '8.2.1'
 }
 
 group = 'com.fiap.videocore'
@@ -24,146 +25,186 @@ repositories {
 }
 
 ext {
-    set('lombokVersion', "1.18.42")
-    set('mapStructVersion', "1.6.3")
-    set('logstashEncoderVersion', "9.0")
-    set('javaCvVersion', "1.5.12")
+	set('lombokVersion', "1.18.42")
+	set('mapStructVersion', "1.6.3")
+	set('logstashEncoderVersion', "9.0")
+	set('javaCvVersion', "1.5.12")
+	set('azureBlobSdkVersion', "12.31.2")
 
-    set('openTelBomVersion', "1.58.0")
-    set('openTelInstBomVersion', "2.23.0-alpha")
-    set('micrometerBomVersion', "1.16.2")
-    set('springAzureCloudBomVersion', "7.0.0")
-    set('azureSdkBomVersion', "1.3.4")
+	set('openTelBomVersion', "1.58.0")
+	set('openTelInstBomVersion', "2.23.0-alpha")
+	set('micrometerBomVersion', "1.16.2")
+	set('springAzureCloudBomVersion', "7.0.0")
+	set('azureSdkBomVersion', "1.3.4")
 }
 
 dependencyManagement {
-    imports {
-        mavenBom "io.opentelemetry:opentelemetry-bom:${openTelBomVersion}"
-        mavenBom "io.opentelemetry.instrumentation:opentelemetry-instrumentation-bom-alpha:${openTelInstBomVersion}"
-        mavenBom "io.micrometer:micrometer-bom:${micrometerBomVersion}"
-        mavenBom "com.azure.spring:spring-cloud-azure-dependencies:${springAzureCloudBomVersion}"
-        mavenBom "com.azure:azure-sdk-bom:${azureSdkBomVersion}"
-    }
+	imports {
+		mavenBom "io.opentelemetry:opentelemetry-bom:${openTelBomVersion}"
+		mavenBom "io.opentelemetry.instrumentation:opentelemetry-instrumentation-bom-alpha:${openTelInstBomVersion}"
+		mavenBom "io.micrometer:micrometer-bom:${micrometerBomVersion}"
+		mavenBom "com.azure.spring:spring-cloud-azure-dependencies:${springAzureCloudBomVersion}"
+		mavenBom "com.azure:azure-sdk-bom:${azureSdkBomVersion}"
+	}
 }
 
 dependencies {
 
-    // Spring Boot
-    implementation 'org.springframework.boot:spring-boot-starter-web'
+	// Spring Boot
+	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter'
 
-    // Media Processor
-    implementation "org.bytedeco:javacv-platform:${javaCvVersion}"
+	// Media Processor
+	implementation "org.bytedeco:javacv-platform:${javaCvVersion}"
 
-    // Azure
-    implementation('com.azure.spring:spring-cloud-azure-starter-servicebus'){
-        exclude group: 'com.azure.spring', module: 'spring-cloud-azure-autoconfigure'
-    }
-    implementation 'com.azure:azure-storage-blob'
+	// Azure
+	implementation('com.azure.spring:spring-cloud-azure-starter-servicebus'){
+		exclude group: 'com.azure.spring', module: 'spring-cloud-azure-autoconfigure'
+	}
+	// https://stackoverflow.com/questions/75252848/azure-storage-blobs-support-for-localdevelopment-throws-the-value-for-one-of-the
+	implementation "com.azure:azure-storage-blob:${azureBlobSdkVersion}"
 
-    // AOP
-    implementation 'org.springframework.boot:spring-boot-starter-aspectj'
+	// AOP
+	implementation 'org.springframework.boot:spring-boot-starter-aspectj'
 
-    // Observabilidade (Instrumentação automática)
-    implementation 'org.springframework.boot:spring-boot-starter-opentelemetry'
-    runtimeOnly 'org.springframework.boot:spring-boot-starter-actuator'
-    runtimeOnly 'io.opentelemetry.instrumentation:opentelemetry-spring-boot-starter'
-    runtimeOnly "net.logstash.logback:logstash-logback-encoder:${logstashEncoderVersion}"
+	// Observabilidade (Instrumentação automática)
+	implementation 'org.springframework.boot:spring-boot-starter-opentelemetry'
+	runtimeOnly 'org.springframework.boot:spring-boot-starter-actuator'
+	runtimeOnly 'io.opentelemetry.instrumentation:opentelemetry-spring-boot-starter'
+	runtimeOnly "net.logstash.logback:logstash-logback-encoder:${logstashEncoderVersion}"
 
-    // Lombok e MapStruct
-    compileOnly "org.projectlombok:lombok:${lombokVersion}"
-    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
-    compileOnly "org.mapstruct:mapstruct:${mapStructVersion}"
-    annotationProcessor "org.mapstruct:mapstruct-processor:${mapStructVersion}"
+	// Lombok e MapStruct
+	compileOnly "org.projectlombok:lombok:${lombokVersion}"
+	annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+	compileOnly "org.mapstruct:mapstruct:${mapStructVersion}"
+	annotationProcessor "org.mapstruct:mapstruct-processor:${mapStructVersion}"
 
-    // Teste
+	// Teste
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
+tasks.named("compileJava") {
+	dependsOn(spotlessApply)
+}
+
 tasks.named('test') {
 	useJUnitPlatform()
-    finalizedBy(jacocoTestReport)
+	finalizedBy(jacocoTestReport)
 }
 
 sonar {
-    properties {
-        property 'sonar.projectKey', 'FIAP-SOAT-TECH-TEAM_videocore-worker'
-        property 'sonar.organization', 'fiap-soat-8-tech-team'
-        property 'sonar.projectName', 'videocore-worker'
-        property 'sonar.token', System.getenv("SONAR_CLOUD_TOKEN") ?: env.SONAR_CLOUD_TOKEN.value
-        property 'sonar.coverage.jacoco.xmlReportPaths', 'build/reports/jacoco/test/jacocoTestReport.xml'
-        property 'sonar.exclusions', [
-                // Application main class
-                '**/WorkerApplication.java',
-                // Configuration classes
-                '**/config/**',
-                '**/*Config.java',
-                '**/*Configuration.java',
-                '**/*Properties.java',
-                // Exceptions
-                "**/*exception*/**",
-                // DTOs and Request/Response classes
-                '**/dto/**',
-                '**/request/**',
-                '**/response/**',
-                '**/payload/**',
-                // MapStruct generated mappers
-                '**/mapper/**/*Impl.java',
-                '**/mapper/**/*MapperImpl*.java',
-                // Infrastructure adapters (controllers, repositories, etc.)
-                '**/infrastructure/in/**',
-                '**/infrastructure/out/**',
-                // Common infrastructure
-                '**/infrastructure/common/**',
-                // Common Observability
-                '**/common/observability/**',
-                // Graal VM Hints
-                '**/common/hints/**',
-                // Package info files
-                '**/package-info.java'
-        ].join(',')
-        property 'sonar.test.exclusions', '**/fixtures/**'
-    }
+	properties {
+		property 'sonar.projectKey', 'FIAP-SOAT-TECH-TEAM_videocore-worker'
+		property 'sonar.organization', 'fiap-soat-8-tech-team'
+		property 'sonar.projectName', 'videocore-worker'
+		property 'sonar.token', System.getenv("SONAR_CLOUD_TOKEN") ?: env.SONAR_CLOUD_TOKEN.value
+		property 'sonar.coverage.jacoco.xmlReportPaths', 'build/reports/jacoco/test/jacocoTestReport.xml'
+		property 'sonar.exclusions', [
+			// Application main class
+			'**/WorkerApplication.java',
+			// Configuration classes
+			'**/config/**',
+			'**/*Config.java',
+			'**/*Configuration.java',
+			'**/*Properties.java',
+			// Exceptions
+			"**/*exception*/**",
+			// DTOs and Request/Response classes
+			'**/dto/**',
+			'**/request/**',
+			'**/response/**',
+			'**/payload/**',
+			// MapStruct generated mappers
+			'**/mapper/**/*Impl.java',
+			'**/mapper/**/*MapperImpl*.java',
+			// Infrastructure adapters (controllers, repositories, etc.)
+			'**/infrastructure/in/**',
+			'**/infrastructure/out/**',
+			// Common infrastructure
+			'**/infrastructure/common/**',
+			// Common Observability
+			'**/common/observability/**',
+			// Graal VM Hints
+			'**/common/hints/**',
+			// Package info files
+			'**/package-info.java'
+		].join(',')
+		property 'sonar.test.exclusions', '**/fixtures/**'
+	}
 }
 
 jacocoTestReport {
-    reports {
-        xml.required = true
-        html.required = true
-    }
-    afterEvaluate {
-        classDirectories.setFrom(files(classDirectories.files.collect {
-            fileTree(dir: it, exclude: [
-                    // Application main class
-                    '**/WorkerApplication.java',
-                    // Configuration classes
-                    '**/config/**',
-                    '**/*Config.java',
-                    '**/*Configuration.java',
-                    '**/*Properties.java',
-                    // Exceptions
-                    "**/*exception*/**",
-                    // DTOs and Request/Response classes
-                    '**/dto/**',
-                    '**/request/**',
-                    '**/response/**',
-                    '**/payload/**',
-                    // MapStruct generated mappers
-                    '**/mapper/**/*Impl.java',
-                    '**/mapper/**/*MapperImpl*.java',
-                    // Infrastructure adapters (controllers, repositories, etc.)
-                    '**/infrastructure/in/**',
-                    '**/infrastructure/out/**',
-                    // Common infrastructure
-                    '**/infrastructure/common/**',
-                    // Common Observability
-                    '**/common/observability/**',
-                    // Graal VM Hints
-                    '**/common/hints/**',
-                    // Package info files
-                    '**/package-info.java'
-            ])
-        }))
-    }
+	reports {
+		xml.required = true
+		html.required = true
+	}
+	afterEvaluate {
+		classDirectories.setFrom(files(classDirectories.files.collect {
+			fileTree(dir: it, exclude: [
+				// Application main class
+				'**/WorkerApplication.java',
+				// Configuration classes
+				'**/config/**',
+				'**/*Config.java',
+				'**/*Configuration.java',
+				'**/*Properties.java',
+				// Exceptions
+				"**/*exception*/**",
+				// DTOs and Request/Response classes
+				'**/dto/**',
+				'**/request/**',
+				'**/response/**',
+				'**/payload/**',
+				// MapStruct generated mappers
+				'**/mapper/**/*Impl.java',
+				'**/mapper/**/*MapperImpl*.java',
+				// Infrastructure adapters (controllers, repositories, etc.)
+				'**/infrastructure/in/**',
+				'**/infrastructure/out/**',
+				// Common infrastructure
+				'**/infrastructure/common/**',
+				// Common Observability
+				'**/common/observability/**',
+				// Graal VM Hints
+				'**/common/hints/**',
+				// Package info files
+				'**/package-info.java'
+			])
+		}))
+	}
+}
+
+spotless {
+	java {
+		// Usa o Eclipse formatter com configurações customizadas
+		eclipse().configFile('spotless-formatter.xml')
+
+		// Remove imports não utilizados
+		removeUnusedImports()
+
+		// Organiza imports de acordo com o padrão do IntelliJ
+		importOrder('java', 'javax', 'org', 'com', '')
+
+		// Remove espaços em branco no final das linhas
+		trimTrailingWhitespace()
+
+		// Garante que arquivos terminem com nova linha
+		endWithNewline()
+
+		// Aplica formatação apenas nos arquivos Java do src
+		target 'src/**/*.java'
+
+		// Ignora arquivos gerados
+		targetExclude '**/generated/**', '**/build/**'
+
+		// Configurações específicas do IntelliJ
+		formatAnnotations()
+	}
+
+	// Formatação para arquivos Gradle
+	groovyGradle {
+		target '*.gradle'
+		greclipse()
+	}
 }

@@ -1,4 +1,4 @@
-FROM ghcr.io/graalvm/native-image-community:25 AS build
+FROM ghcr.io/graalvm/native-image-community:latest AS build
 WORKDIR /app
 
 # Copiar arquivos de dependências e build
@@ -16,34 +16,44 @@ RUN microdnf install -y findutils
 # Copiar código fonte
 COPY worker/src/ ./src/
 
+# Copiar configuração do Spotless
+COPY worker/spotless-formatter.xml ./
+
 # Construir o aplicativo AOT (native image)
 # Considerações sobre o Build Time: https://www.graalvm.org/latest/reference-manual/native-image/overview/BuildOutput/#graal-compiler (-O2 Default - Performance Produção)
 RUN ./gradlew nativeCompile \
+  --no-fallback \
   # https://github.com/bytedeco/gradle-javacpp?tab=readme-ov-file#the-platform-plugin
   -PjavacppPlatform=linux-x86_64 \
   # https://github.com/Azure/azure-sdk-for-java/blob/main/sdk/spring/README.md#spring-boot-3-support
   --build-args="-J-Djava.security.properties=/app/custom_security/custom.security" \
   # https://github.com/Azure/azure-sdk-for-java/issues/34775
   --build-args="--initialize-at-build-time=org.slf4j.helpers,org.slf4j.LoggerFactory,ch.qos.logback,com.fasterxml.jackson,net.logstash.logback,org.yaml.snakeyaml,tools.jackson.core.util" \
-  # https://github.com/oracle/graal/issues/6549
-  --build-args="-H:ExcludeResources=.*\.so|.*\.dll|.*\.dylib" \
   --no-daemon
 
 # Imagem final
-FROM alpine:3.20 AS runtime
+# https://github.com/bytedeco/javacv/issues/2212
+FROM debian:12-slim AS runtime
 WORKDIR /app
 
-# Adicionar ferramentas básicas para health checks e OpenCV
-RUN apk add --no-cache curl wget tzdata libc6-compat gcompat libstdc++ opencv
+# Adicionar ferramentas básicas
+RUN apt-get update && \
+    apt-get install -y \
+        curl \
+        wget \
+        tzdata \
+    && rm -rf /var/lib/apt/lists/*
 
 # Definir timezone para GMT-3 (America/Sao_Paulo)
-RUN cp /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime && \
+RUN ln -sf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime && \
     echo "America/Sao_Paulo" > /etc/timezone
 
 # Adicionar usuário não-root para segurança
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+RUN addgroup --system appgroup && \
+    adduser --system --ingroup appgroup appuser
 
-# Copiar binário nativo gerado pelo GraalVM
+# Copiar binários nativos gerados pelo GraalVM
+COPY --from=build /app/build/native/nativeCompile/lib*.so /usr/lib/
 COPY --chmod=0755 --from=build /app/build/native/nativeCompile/* worker
 
 # Mudar para usuário não-root
@@ -55,9 +65,6 @@ EXPOSE 9090
 # Verificação de saúde interna
 HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
   CMD wget --spider -q http://localhost:9090/actuator/health || exit 1
-
-# Define onde a aplicação deve procurar pelas libs nativas externas
-ENV LD_LIBRARY_PATH=/usr/lib:/lib:/app/libs
 
 # Iniciar aplicação nativa
 ENTRYPOINT ["/app/worker"]

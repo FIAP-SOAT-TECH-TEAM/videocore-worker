@@ -13,7 +13,7 @@ public class VideoNotFoundException extends RuntimeException {
 		super(message, cause);
 	}
 
-    public VideoNotFoundException(String message, Object... args) {
-        super(String.format(message, args));
-    }
+	public VideoNotFoundException(String message, Object... args) {
+		super(String.format(message, args));
+	}
 }

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<profiles version="21">
+    <profile kind="CodeFormatterProfile" name="Food Core API" version="21">
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_comma_in_annotation" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_comma_in_annotation" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_annotation"
+                 value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_opening_paren_in_annotation"
+                 value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_closing_paren_in_annotation"
+                 value="do not insert"/>
+
+        <!-- Configurações de quebra de linha -->
+        <setting id="org.eclipse.jdt.core.formatter.lineSplit" value="120"/>
+        <setting id="org.eclipse.jdt.core.formatter.tabulation.char" value="tab"/>
+        <setting id="org.eclipse.jdt.core.formatter.tabulation.size" value="4"/>
+        <setting id="org.eclipse.jdt.core.formatter.indentation.size" value="4"/>
+
+        <!-- Quebra de linha em parâmetros de métodos -->
+        <setting id="org.eclipse.jdt.core.formatter.alignment_for_parameters_in_method_declaration" value="16"/>
+        <setting id="org.eclipse.jdt.core.formatter.alignment_for_arguments_in_method_invocation" value="16"/>
+        <setting id="org.eclipse.jdt.core.formatter.alignment_for_arguments_in_allocation_expression" value="16"/>
+
+        <!-- Quebra de linha em chamadas de métodos (method chaining) -->
+        <setting id="org.eclipse.jdt.core.formatter.alignment_for_selector_in_method_invocation" value="80"/>
+        <setting id="org.eclipse.jdt.core.formatter.wrap_before_or_operator_multicatch" value="true"/>
+
+        <!-- Quebra de linha em expressões condicionais -->
+        <setting id="org.eclipse.jdt.core.formatter.alignment_for_conditional_expression" value="80"/>
+        <setting id="org.eclipse.jdt.core.formatter.alignment_for_binary_expression" value="16"/>
+
+        <!-- Quebra de linha em arrays -->
+        <setting id="org.eclipse.jdt.core.formatter.alignment_for_expressions_in_array_initializer" value="16"/>
+
+        <!-- Quebra de linha em annotations -->
+        <setting id="org.eclipse.jdt.core.formatter.alignment_for_annotations_on_parameter" value="16"/>
+        <setting id="org.eclipse.jdt.core.formatter.alignment_for_annotations_on_field" value="16"/>
+        <setting id="org.eclipse.jdt.core.formatter.alignment_for_annotations_on_method" value="16"/>
+        <setting id="org.eclipse.jdt.core.formatter.alignment_for_annotations_on_type" value="16"/>
+
+        <!-- Quebra de linha em strings longas -->
+        <setting id="org.eclipse.jdt.core.formatter.wrap_outer_expressions_when_nested" value="true"/>
+
+        <!-- Configurações para implements e extends -->
+        <setting id="org.eclipse.jdt.core.formatter.alignment_for_superinterfaces_in_type_declaration" value="16"/>
+        <setting id="org.eclipse.jdt.core.formatter.alignment_for_superclass_in_type_declaration" value="16"/>
+
+        <!-- Espaçamento -->
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_comma_in_method_declaration_parameters"
+                 value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_comma_in_method_invocation_arguments"
+                 value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_comma_in_method_declaration_parameters"
+                 value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_comma_in_method_invocation_arguments"
+                 value="do not insert"/>
+
+        <!-- Quebra de linha em throws -->
+        <setting id="org.eclipse.jdt.core.formatter.alignment_for_throws_clause_in_method_declaration" value="16"/>
+
+        <!-- Configurações para lambda expressions -->
+        <setting id="org.eclipse.jdt.core.formatter.alignment_for_lambda_expression" value="16"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_lambda_arrow" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_lambda_arrow" value="insert"/>
+
+        <!-- Quebras de linha sempre antes de operators -->
+        <setting id="org.eclipse.jdt.core.formatter.wrap_before_binary_operator" value="true"/>
+
+        <!-- Manter quebras de linha existentes em alguns casos -->
+        <setting id="org.eclipse.jdt.core.formatter.keep_empty_lines_in_method_body" value="1"/>
+        <setting id="org.eclipse.jdt.core.formatter.keep_empty_lines_in_compilation_unit" value="1"/>
+
+        <!-- Configurações para construtores -->
+        <setting id="org.eclipse.jdt.core.formatter.alignment_for_parameters_in_constructor_declaration" value="16"/>
+        <setting id="org.eclipse.jdt.core.formatter.alignment_for_arguments_in_explicit_constructor_call" value="16"/>
+
+        <!-- Configurações para generics -->
+        <setting id="org.eclipse.jdt.core.formatter.alignment_for_type_parameters" value="16"/>
+        <setting id="org.eclipse.jdt.core.formatter.alignment_for_type_arguments" value="16"/>
+
+    </profile>
+</profiles>
