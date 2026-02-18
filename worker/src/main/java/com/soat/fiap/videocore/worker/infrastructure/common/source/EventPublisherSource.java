@@ -7,10 +7,12 @@ import com.soat.fiap.videocore.worker.core.interfaceadapters.dto.ProcessVideoSta
  */
 public interface EventPublisherSource {
 
-    /**
-     * Publica um evento indicando a atualização do status de processamento de vídeo.
-     *
-     * @param event DTO contendo informações do evento de atualização
-     */
-    void publishVideoStatusProcessUpdateEvent(ProcessVideoStatusUpdateEventDto event);
+	/**
+	 * Publica um evento indicando a atualização do status de processamento de
+	 * vídeo.
+	 *
+	 * @param event
+	 *            DTO contendo informações do evento de atualização
+	 */
+	void publishVideoStatusProcessUpdateEvent(ProcessVideoStatusUpdateEventDto event);
 }

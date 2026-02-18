@@ -7,13 +7,13 @@ import com.soat.fiap.videocore.worker.core.domain.exceptions.VideoException;
  */
 public record VideoName(String value) {
 
-    public VideoName {
-        validate(value);
-    }
+	public VideoName {
+		validate(value);
+	}
 
-    private static void validate(String value) {
-        if (value == null || value.isBlank()) {
-            throw new VideoException("O nome do vídeo não pode ser nulo ou vazio");
-        }
-    }
+	private static void validate(String value) {
+		if (value == null || value.isBlank()) {
+			throw new VideoException("O nome do vídeo não pode ser nulo ou vazio");
+		}
+	}
 }

@@ -7,12 +7,12 @@ import java.util.Objects;
  */
 public record Metadata(String userId, String requestId) {
 
-    public Metadata {
-        validate(userId, requestId);
-    }
+	public Metadata {
+		validate(userId, requestId);
+	}
 
-    private static void validate(String userId, String requestId) {
-        Objects.requireNonNull(userId, "userId não pode ser nulo");
-        Objects.requireNonNull(requestId, "requestId não pode ser nulo");
-    }
+	private static void validate(String userId, String requestId) {
+		Objects.requireNonNull(userId, "userId não pode ser nulo");
+		Objects.requireNonNull(requestId, "requestId não pode ser nulo");
+	}
 }
