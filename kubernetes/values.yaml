@@ -44,7 +44,7 @@ api:
     serviceBus:
       queueName: "replaced"
       namespace: "replaced"
-      messageCount: 5
+      messageCount: 2
       
 secrets:
   azureKeyVault:
