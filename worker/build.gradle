@@ -64,8 +64,8 @@ dependencies {
 	// https://stackoverflow.com/questions/75252848/azure-storage-blobs-support-for-localdevelopment-throws-the-value-for-one-of-the
 	implementation "com.azure:azure-storage-blob:${azureBlobSdkVersion}"
 
-    // Jackson
-    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
+	// Jackson
+	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
 
 	// AOP
 	implementation 'org.springframework.boot:spring-boot-starter-aspectj'
