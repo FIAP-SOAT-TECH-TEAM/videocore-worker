@@ -2,6 +2,13 @@
 
 <div align="center">
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=FIAP-SOAT-TECH-TEAM_videocore-worker&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=FIAP-SOAT-TECH-TEAM_videocore-worker)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=FIAP-SOAT-TECH-TEAM_videocore-worker&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=FIAP-SOAT-TECH-TEAM_videocore-worker)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=FIAP-SOAT-TECH-TEAM_videocore-worker&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=FIAP-SOAT-TECH-TEAM_videocore-worker)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=FIAP-SOAT-TECH-TEAM_videocore-worker&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=FIAP-SOAT-TECH-TEAM_videocore-worker)
+
+</div>
+
 Microsserviço de processamento de vídeo do ecossistema VideoCore, responsável por extrair frames de vídeos utilizando FFmpeg e gerar screenshots. Desenvolvido como parte do curso de Arquitetura de Software da FIAP (Tech Challenge).
 
 </div>
@@ -15,6 +22,8 @@ Microsserviço de processamento de vídeo do ecossistema VideoCore, responsável
   <a href="#deploy">Fluxo de Deploy</a> •
   <a href="#contribuicao">Contribuição</a>
 </div><br>
+
+> 📽️ Vídeo de demonstração da arquitetura: [https://youtu.be/k3XbPRxmjCw](https://youtu.be/k3XbPRxmjCw)<br>
 
 ---
 
@@ -303,5 +312,5 @@ Este projeto está licenciado sob a [MIT License](LICENSE).
 
 <div align="center">
   <strong>FIAP - Pós-graduação em Arquitetura de Software</strong><br>
-  Tech Challenge
+  Tech Challenge 4
 </div>
