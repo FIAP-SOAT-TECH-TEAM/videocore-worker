@@ -11,8 +11,6 @@
 
 Microsserviço de processamento de vídeo do ecossistema VideoCore, responsável por extrair frames de vídeos utilizando FFmpeg e gerar screenshots. Desenvolvido como parte do curso de Arquitetura de Software da FIAP (Tech Challenge).
 
-</div>
-
 <div align="center">
   <a href="#visao-geral">Visão Geral</a> •
   <a href="#arquitetura">Arquitetura</a> •
