@@ -9,15 +9,21 @@
 
 </div>
 
-Microsserviço de processamento de vídeo do ecossistema VideoCore, responsável por extrair frames de vídeos utilizando FFmpeg e gerar screenshots. Desenvolvido como parte do curso de Arquitetura de Software da FIAP (Tech Challenge).
+Microsserviço de processamento de vídeo do ecossistema VideoCore, responsável por extrair frames de vídeos utilizando FFmpeg e gerar screenshots. Desenvolvido como parte do curso de Arquitetura de Software da FIAP (Hackaton).
 
 <div align="center">
   <a href="#visao-geral">Visão Geral</a> •
-  <a href="#arquitetura">Arquitetura</a> •
   <a href="#repositorios">Repositórios</a> •
   <a href="#tecnologias">Tecnologias</a> •
-  <a href="#instalacao">Instalação</a> •
+  <a href="#infra">Infraestrutura</a> •
+  <a href="#estrutura">Estrutura</a> •
+  <a href="#terraform">Terraform</a> •
+  <a href="#arquitetura">Arquitetura</a> •
+  <a href="#dominio">Domínio</a> •
+  <a href="#dbtecnicos">Débitos Técnicos</a> •
+  <a href="#limitacoesqt">Limitações de Quota</a> •
   <a href="#deploy">Fluxo de Deploy</a> •
+  <a href="#instalacao">Instalação</a> •
   <a href="#contribuicao">Contribuição</a>
 </div><br>
 
@@ -26,6 +32,9 @@ Microsserviço de processamento de vídeo do ecossistema VideoCore, responsável
 ---
 
 <h2 id="visao-geral">📋 Visão Geral</h2>
+
+<details>
+<summary>Expandir para mais detalhes</summary>
 
 O **VideoCore Worker** é o microsserviço responsável pelo processamento de vídeos do sistema. Ele escuta eventos de criação de blobs no Azure Storage via Service Bus, realiza a extração de frames utilizando **FFmpeg (JavaCV)** e publica os screenshots processados de volta no Blob Storage.
 
@@ -39,7 +48,7 @@ O **VideoCore Worker** é o microsserviço responsável pelo processamento de v�
 
 ### Fluxo de Processamento
 
-```
+```text
 1. BlobCreated Event (Service Bus)
         ↓
 2. Download do vídeo (Azure Blob Storage)
@@ -62,56 +71,68 @@ O **VideoCore Worker** é o microsserviço responsável pelo processamento de v�
 | `COMPLETED` | Screenshots prontos para download |
 | `FAILED` | Erro no processamento |
 
+</details>
+
 ---
 
-<h2 id="arquitetura">🧱 Arquitetura</h2>
+<h2 id="repositorios">📁 Repositórios do Ecossistema</h2>
 
 <details>
 <summary>Expandir para mais detalhes</summary>
 
-### 🎯 Clean Architecture
+| Repositório | Responsabilidade | Tecnologias |
+|-------------|------------------|-------------|
+| **videocore-infra** | Infraestrutura base | Terraform, Azure, AWS |
+| **videocore-db** | Banco de dados | Terraform, Azure Cosmos DB |
+| **videocore-auth** | Microsserviço de autenticação | C#, .NET 9, ASP.NET |
+| **videocore-reports** | Microsserviço de relatórios | Java 25, GraalVM, Spring Boot 4, Cosmos DB |
+| **videocore-worker** | Microsserviço de processamento de vídeo | Java 25, GraalVM, Spring Boot 4, FFmpeg |
+| **videocore-notification** | Microsserviço de notificações | Java 25, GraalVM, Spring Boot 4, SMTP |
+| **videocore-frontend** | Interface web do usuário | Next.js 16, React 19, TypeScript |
 
-O projeto segue os princípios de **Clean Architecture** com separação clara de responsabilidades:
+</details>
 
-```
-core/
-├── domain/           # Entidades de vídeo e regras de negócio
-├── usecases/         # Casos de uso de processamento
-└── interfaceadapters/
-    └── mapper/       # Conversão de eventos ↔ domínio
+---
 
-infrastructure/
-├── in/               # Adaptadores de entrada
-│   └── event/azsvcbus/
-│       ├── listener/     # ProcessListener (Service Bus)
-│       ├── handler/      # ProcessHandler (message handling)
-│       └── config/       # ProcessConfig (Spring config)
-├── out/              # Adaptadores de saída
-│   ├── process/          # FfmpegProcessor (video processing)
-│   ├── persistence/
-│   │   ├── file/         # DefaultFileSource (temp files)
-│   │   └── blobstorage/  # AzureBlobStorageRepository
-│   └── event/azsvcbus/   # AzSvcEventSender (status publishing)
-└── common/           # Configurações, sources, exceções
-```
+<h2 id="tecnologias">🔧 Tecnologias</h2>
 
-### 🎬 Processamento de Vídeo
+<details>
+<summary>Expandir para mais detalhes</summary>
 
-```
-ProcessListener (Service Bus Event)
-    ↓
-ProcessHandler (Message Parsing)
-    ↓
-Use Case (Business Logic)
-    ↓
-AzureBlobStorageRepository.download(video)
-    ↓
-FfmpegProcessor.extractFrames(video, interval)
-    ↓
-AzureBlobStorageRepository.upload(images + zip)
-    ↓
-AzSvcEventSender.publish(status: COMPLETED)
-```
+| Categoria | Tecnologia |
+|-----------|------------|
+| **Linguagem** | Java 25 (GraalVM) |
+| **Framework** | Spring Boot 4.0.1 |
+| **Processamento** | JavaCV, FFmpeg |
+| **Mensageria** | Azure Service Bus |
+| **Storage** | Azure Blob Storage |
+| **Observabilidade** | OpenTelemetry, Micrometer, Logstash |
+| **Build** | Gradle |
+| **Compilação** | GraalVM Native Image |
+| **Container** | Docker |
+| **Orquestração** | Kubernetes (Helm), KEDA |
+| **IaC** | Terraform |
+| **CI/CD** | GitHub Actions |
+| **Qualidade** | SonarQube |
+
+</details>
+
+---
+
+<h2 id="infra">🌐 Infraestrutura</h2>
+
+<details>
+<summary>Expandir para mais detalhes</summary>
+
+### ☸️ Recursos Kubernetes
+
+| Recurso | Descrição |
+|------------------------|-----------------------------------------------------------------------------------------------------|
+| **Deployment** | Pods com health probes, limites de recursos e variáveis de ambiente |
+| **ConfigMap** | Configurações não sensíveis |
+| **SecretProviderClass** | Integração com Azure Key Vault para gerenciamento de segredos |
+| **KEDA ScaledObject** | Escalabilidade automática baseada em métricas de fila (Service Bus) |
+| **KEDA TriggerAuth** | Autenticação para escalonamento KEDA usando credenciais externas |
 
 ### 🔌 Integrações
 
@@ -121,22 +142,33 @@ AzSvcEventSender.publish(status: COMPLETED)
 | **Azure Blob Storage** | Síncrona | Download de vídeos, upload de screenshots e ZIPs |
 | **FFmpeg (JavaCV)** | Local | Extração de frames de vídeo |
 
-### 📊 Observabilidade
+### 🔐 Azure Key Vault Provider (CSI)
 
-- **Traces**: OpenTelemetry (OTLP gRPC)
-- **Métricas**: Micrometer (OTLP gRPC)
-- **Logs**: Logstash JSON format
-- **Health Checks**: Spring Actuator (`/actuator/health`)
+- Sincroniza secrets do Azure Key Vault com Secrets do Kubernetes
+- Monta volumes CSI com `tmpfs` dentro dos Pods
+- Utiliza o CRD **SecretProviderClass**
 
-### ☸️ Kubernetes
+> ⚠️ Caso o valor de uma secret seja alterado no Key Vault, é necessário **reiniciar os Pods**, pois variáveis de ambiente são injetadas apenas na inicialização.
+>
+> Referência: <https://learn.microsoft.com/en-us/azure/aks/csi-secrets-store-configuration-options>
 
-- **Auto-scaling**: KEDA (ScaledObject) baseado em mensagens do Service Bus
-- **TriggerAuthentication**: Autenticação KEDA com Service Bus
-- **Azure Key Vault Provider**: Secrets via CSI driver
+### 👁️ Observabilidade
 
-### 📦 Estrutura do Projeto
+- **Logs**: Envio para `NewRelic` via `Open Telemetry Collector` utilizando protocolo `OTLP + GRPC`
+- **Métricas**: Envio para `NewRelic` via `Open Telemetry Collector` utilizando protocolo `OTLP + GRPC`
+- **Tracing**: Envio para `NewRelic` via `Open Telemetry Collector` utilizando protocolo `OTLP + GRPC`
+- **Dashboards**: Visualização na UI do `NewRelic`
 
-```
+</details>
+
+---
+
+<h2 id="estrutura">📦 Estrutura do Projeto</h2>
+
+<details>
+<summary>Expandir para mais detalhes</summary>
+
+```text
 videocore-worker/
 ├── worker/
 │   ├── build.gradle              # Dependências (JavaCV, FFmpeg)
@@ -176,6 +208,7 @@ videocore-worker/
 ├── terraform/
 │   ├── main.tf                   # Helm deployment
 │   └── variables.tf
+├── docs/                         # Assets de documentação
 └── .github/workflows/
     ├── ci.yaml                   # Build, test, FFmpeg setup
     └── cd.yaml                   # Terraform apply
@@ -185,71 +218,149 @@ videocore-worker/
 
 ---
 
-<h2 id="repositorios">📁 Repositórios do Ecossistema</h2>
+<h2 id="terraform">🗄️ Módulos Terraform</h2>
 
-| Repositório | Responsabilidade | Tecnologias |
-|-------------|------------------|-------------|
-| **videocore-infra** | Infraestrutura base (AKS, VNET, APIM, Key Vault) | Terraform, Azure, AWS |
-| **videocore-db** | Banco de dados | Terraform, Azure Cosmos DB |
-| **videocore-frontend** | Interface web do usuário | Next.js 16, React 19, TypeScript |
-| **videocore-reports** | Microsserviço de relatórios | Java 25, Spring Boot 4, Cosmos DB |
-| **videocore-worker** | Microsserviço de processamento (este repositório) | Java 25, Spring Boot 4, FFmpeg |
-| **videocore-observability** | Stack de observabilidade | OpenTelemetry, Jaeger, Prometheus, Grafana |
+<details>
+<summary>Expandir para mais detalhes</summary>
 
----
+O código `HCL` desenvolvido segue uma estrutura modular:
 
-<h2 id="tecnologias">🔧 Tecnologias</h2>
+| Módulo | Descrição |
+|--------|-----------|
+| **helm** | Implantação do Helm Chart da aplicação, consumindo as informações necessárias via `Terraform Remote State` |
 
-| Categoria | Tecnologia |
-|-----------|------------|
-| **Linguagem** | Java 25 |
-| **Framework** | Spring Boot 4.0.1 |
-| **Processamento** | JavaCV, FFmpeg |
-| **Mensageria** | Azure Service Bus |
-| **Storage** | Azure Blob Storage |
-| **Observabilidade** | OpenTelemetry, Micrometer, Logstash |
-| **Build** | Gradle |
-| **Compilação** | GraalVM Native Image |
-| **Container** | Docker |
-| **Orquestração** | Kubernetes (Helm), KEDA |
-| **IaC** | Terraform |
-| **CI/CD** | GitHub Actions |
-| **Qualidade** | SonarQube |
+> ⚠️ Os outpus criados são consumidos posteriormente em pipelines via `$GITHUB_OUTPUT` ou `Terraform Remote State`, para compartilhamento de informações. Tornando, desta forma, dinãmico o provisionamento da infraestrutura.
+
+</details>
 
 ---
 
-<h2 id="instalacao">🚀 Instalação e Uso</h2>
+<h2 id="arquitetura">🧱 Arquitetura</h2>
 
-### Variáveis de Ambiente
+<details>
+<summary>Expandir para mais detalhes</summary>
 
-```bash
-AZ_SVC_BUS_CONNECTION_STRING=               # Connection string Service Bus
-AZURE_BLOB_STORAGE_CONNECTION_STRING=       # Connection string Blob Storage
-AZURE_BLOB_STORAGE_VIDEO_CONTAINER_NAME=    # Container de vídeos
-AZURE_BLOB_STORAGE_IMAGE_CONTAINER_NAME=    # Container de imagens
+### 📌 Princípios Adotados
+
+- **DDD**: Bounded context de pedido isolado
+- **Clean Architecture**: Domínio independente de frameworks
+- **Separação de responsabilidades**: Cada camada tem responsabilidade bem definida
+- **Independência de frameworks**: Domínio não depende de Spring ou outras bibliotecas
+- **Testabilidade**: Lógica de negócio isolada facilita testes unitários
+- **Inversão de Dependência**: Classes utilizam abstrações, nunca implementações concretas diretamente
+- **Injeção de Dependência**: Classes recebem via construtor os objetos que necessitam utilizar
+- **SAGA Coreografada**: Comunicação assíncrona via eventos
+- **Comunicação Síncrona Resiliente**: Embora ainda não possua comunicações síncronas, apenas assíncronas, caso o projeto evolua, serão implementadas usando padrões de resiliência como Circuit Beaker e Service Discovery
+
+### 🎯 Clean Architecture
+
+O projeto segue os princípios de **Clean Architecture** com separação clara de responsabilidades:
+
+```text
+core/
+├── domain/           # Entidades de vídeo e regras de negócio
+├── usecases/         # Casos de uso de processamento
+└── interfaceadapters/
+    └── mapper/       # Conversão de eventos ↔ domínio
+
+infrastructure/
+├── in/               # Adaptadores de entrada
+│   └── event/azsvcbus/
+│       ├── listener/     # ProcessListener (Service Bus)
+│       ├── handler/      # ProcessHandler (message handling)
+│       └── config/       # ProcessConfig (Spring config)
+├── out/                  # Adaptadores de saída
+│   ├── process/          # FfmpegProcessor (video processing)
+│   ├── persistence/
+│   │   ├── file/         # DefaultFileSource (temp files)
+│   │   └── blobstorage/  # AzureBlobStorageRepository
+│   └── event/azsvcbus/   # AzSvcEventSender (status publishing)
+└── common/           # Configurações, sources, exceções
 ```
 
-### Desenvolvimento Local
+### 📊 Diagrama de Arquitetura: Saga Coreografado
 
-```bash
-# Clonar repositório
-git clone https://github.com/FIAP-SOAT-TECH-TEAM/videocore-worker.git
-cd videocore-worker/worker
+![Diagrama Domínio DDD](docs/diagrams/saga-diagram.svg)
 
-# Configurar variáveis de ambiente
-cp env-example .env
+</details>
 
-# Compilar
-./gradlew build
+---
 
-# Executar
-./gradlew bootRun
+<h2 id="dominio">📽️ Domínio</h2>
 
-# Executar testes
-./gradlew test
-```
+<details>
+<summary>Expandir para mais detalhes</summary>
 
-> ⚠️ O FFmpeg deve estar disponível no sistema para processamento local de vídeos.
+### 📖 Dicionário de Linguagem Ubíqua
+
+| Termo | Descrição |
+|-------|-----------|
+| **Vídeo** | Arquivo enviado pelo usuário para ser processado, analisado e convertido em imagens. |
+| **Processamento de Vídeo** | Sequência de etapas automáticas para analisar, extrair imagens e gerar dados a partir de um vídeo. |
+| **Frame** | Imagem individual extraída de um vídeo em um instante específico. |
+| **Extração de Frames** | Processo de capturar imagens do vídeo em intervalos definidos, normalmente a cada minuto. |
+| **Screenshot** | Imagem gerada a partir de um frame do vídeo, utilizada para visualização ou análise posterior. |
+| **Duração do Vídeo** | Tempo total, em minutos, do vídeo enviado para processamento. |
+| **Metadados** | Informações complementares sobre o vídeo, como nome, duração, formato e horários. |
+| **Corte de Frame por Minuto** | Ponto do vídeo (em minutos) onde uma imagem foi extraída para análise. |
+| **Nome do Vídeo** | Identificação do vídeo enviado pelo usuário, utilizada para referência e organização. |
+| **Arquivo Temporário** | Cópia local do vídeo ou das imagens, utilizada durante o processamento antes do upload final. |
+| **Arquivo ZIP** | Arquivo compactado contendo todas as imagens extraídas do vídeo, disponibilizado para download. |
+| **Status do Processamento** | Situação atual do processamento do vídeo, como iniciado, em andamento, concluído ou com erro. |
+| **Evento de Atualização de Status** | Comunicação enviada para outros sistemas informando mudanças no status do processamento do vídeo. |
+| **Exclusão de Arquivo** | Remoção de arquivos temporários ou processados após o término do processamento. |
+| **Download de Vídeo** | Ação de buscar o vídeo original do armazenamento para iniciar o processamento. |
+| **Upload de Imagens** | Envio das imagens extraídas e arquivos ZIP para o armazenamento, tornando-os acessíveis ao usuário. |
+| **Erro de Processamento** | Situação em que o processamento do vídeo falha, impedindo a geração das imagens ou do arquivo ZIP. |
+
+### 📊 Diagrama de Domínio e Sub-Domínios (DDD Estratégico)
+
+![Diagrama Domínio DDD](docs/diagrams/domain-diagram-worker.svg)
+
+</details>
+
+---
+
+<h2 id="dbtecnicos">⚠️ Débitos Técnicos</h2>
+
+<details>
+<summary>Expandir para mais detalhes</summary>
+
+| Débito | Descrição | Impacto |
+|--------|-----------|---------|
+| **Workload Identity** | Usar Workload Identity para Pods acessarem recursos Azure (atual: Azure Key Vault Provider) | Melhora de segurança e gestão de credenciais |
+| **Migrar Linguagem Compilada** | Pelo workload deste microsserviço se tratar de `CPU-Bound`, para máximr performance, utilizou-se a GraalVM para criação de uma imagem nativa. Embora os ganhos sejam notórios, especificamente neste microsserviço que utiliza a biblioteca `OpenCV`, observou-se o uso intensivo de `JNI`, `Reflections`, entre outras coisas, e o compilador precisa conhecer tudo que for dinãmico em tempo de build `(reachability metadata)`. Neste sentido, utilizar uma linguagem nativamente compilada (Go, Rust...) pode trazer ganhos de manutenção no futuro | Melhora da manutenabilidade |
+| **Implementar Outbox Pattern** | Inspirado no padrão `Transactional Outbox Pattern`, teoricamente destinado para atomicidade de publicação de eventos x persistência em bancos relacionais, pensar em uma maneira de garantir que o processamento do vídeo, a geração do zip e a publicação do evento sejam atômicas | Resiliência |
+| **Implementar DLQ** | Implementar lógica de reprocessamento do vídeo em caso de falha | Resiliência |
+| **Implementar BDD** | Utilizar abordagem BDD para desenvolvimento de testes de integração em fluxos críticos | Testabilidade |
+
+</details>
+
+---
+
+<h2 id="limitacoesqt">📉 Limitações de Quota (Azure for Students)</h2>
+
+<details>
+<summary>Expandir para mais detalhes</summary>
+
+A assinatura **Azure for Students** impõe as seguintes restrições:
+
+- **Região**: com base em uma policy específica de assinatura;
+
+- **Quota de VMs**: Apenas **2 instâncias** do SKU utilizado para o node pool do AKS, tendo um impacto direto na escalabilidade do cluster. Quando o limite é atingido, novos nós não podem ser criados e dão erro no provisionamento de workloads.
+
+### Erro no CD dos Microsserviços
+
+Durante o deploy dos microsserviços, Pods podem ficar com status **Pending** e o seguinte erro pode aparecer:
+
+![Error Quota CLI](docs/images/error-quota-cli.jpeg)
+![Error Quota UI](docs/images/error-quota-ui.jpeg)
+
+**Causa**: O cluster atingiu o limite máximo de VMs permitido pela quota e não há recursos computacionais (CPU/memória) disponíveis nos nós existentes.
+
+**Solução**: Aguardar a liberação de recursos de outros pods e reexecutar CI + CD.
+
+</details>
 
 ---
 
@@ -271,6 +382,13 @@ cp env-example .env
 2. **Docker**: Build de imagem GraalVM Native Image + FFmpeg
 3. **Registry**: Push para Azure Container Registry (ACR)
 
+### Autenticação das Pipelines
+
+- **Azure:**
+  - **OIDC**: Token emitido pelo GitHub
+  - **Azure AD Federation**: Confia no emissor GitHub
+  - **Service Principal**: Autentica sem secret
+
 ### Proteções
 
 - Branch `main` protegida
@@ -279,20 +397,58 @@ cp env-example .env
 
 ### Ordem de Provisionamento
 
-```
-1. videocore-infra          (AKS, VNET, APIM, Key Vault)
+```text
+1. videocore-infra          (AKS, VNET, APIM, etc)
 2. videocore-db             (Cosmos DB)
-3. videocore-observability  (Jaeger, Prometheus, Grafana)
+3. videocore-auth           (Microsserviço de autenticação)
 4. videocore-reports        (Microsserviço de relatórios)
-5. videocore-worker         (Este repositório)
-6. videocore-frontend       (Interface web)
+5. videocore-worker         (Microsserviço de processamento)
+6. videocore-notification   (Microsserviço de notificações)
+7. videocore-frontend       (Aplicação SPA Web)
 ```
 
 </details>
 
 ---
 
+<h2 id="instalacao">🚀 Instalação e Uso</h2>
+
+<details>
+<summary>Expandir para mais detalhes</summary>
+
+### Desenvolvimento Local
+
+```bash
+# Clonar repositório
+git clone https://github.com/FIAP-SOAT-TECH-TEAM/videocore-worker.git
+cd videocore-worker/worker
+
+# Configurar variáveis de ambiente
+cp env-example .env
+
+# Compilar
+./gradlew build
+
+# Executar
+./gradlew bootRun
+
+# Executar testes
+./gradlew test
+```
+
+### Health Check
+
+Após iniciar a aplicação:
+- **Actuator**: http://localhost:${SERVER_PORT}/actuator/health
+
+</details>
+
+---
+
 <h2 id="contribuicao">🤝 Contribuição</h2>
+
+<details>
+<summary>Expandir para mais detalhes</summary>
 
 ### Fluxo de Contribuição
 
@@ -304,11 +460,13 @@ cp env-example .env
 
 ### Licença
 
-Este projeto está licenciado sob a [MIT License](LICENSE).
+Este projeto está licenciado sob a MIT License.
+
+</details>
 
 ---
 
 <div align="center">
   <strong>FIAP - Pós-graduação em Arquitetura de Software</strong><br>
-  Tech Challenge 4
+  Hackaton (Tech Challenge 5)
 </div>
