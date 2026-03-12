@@ -251,6 +251,7 @@ O código `HCL` desenvolvido segue uma estrutura modular:
 - **Injeção de Dependência**: Classes recebem via construtor os objetos que necessitam utilizar
 - **SAGA Coreografada**: Comunicação assíncrona via eventos
 - **Comunicação Síncrona Resiliente**: Embora ainda não possua comunicações síncronas, apenas assíncronas, caso o projeto evolua, serão implementadas usando padrões de resiliência como Circuit Beaker e Service Discovery
+- **Observabilidade**: O microsserviço está inteiramente instrumentado, com logs, tracing e métricas, via API do `Open Telemetry` (baixo acoplamento). Para logs, adota-se o conceito de **Log Canônico**.
 
 ### 🎯 Clean Architecture
 
@@ -281,6 +282,23 @@ infrastructure/
 ### 📊 Diagrama de Arquitetura: Saga Coreografado
 
 ![Diagrama Domínio DDD](docs/diagrams/saga-diagram.svg)
+
+### 📊 Diagrama de Arquitetura: Processamento do Vídeo
+
+![Diagrama Processamento Vídeo](docs/diagrams/process-video-diagram.svg)
+
+Key Points
+
+- A implementação é bem separada por responsabilidades. O controller só orquestra, os use cases encapsulam regras de aplicação e os gateways escondem `Azure`, `filesystem` e `FFmpeg`. Isso deixa o fluxo legível e reduz acoplamento;
+- Há rastreabilidade operacional consistente. O código adiciona contexto canônico do evento, propaga `traceId` ao evento de status e limpa o contexto no `finally`, o que ajuda bastante em troubleshooting distribuído;
+- Há validação de domínio para impedir, entre outras coisas, a configuração inconsistente de corte de frames versus duração do vídeo, evitando processamento inválido cedo;
+- Prevenção de `OOM`:
+  - O vídeo entra como stream vindo do Blob Storage, em vez de ser materializado inteiro na heap;
+  - `Stream` é copiado para arquivo temporário local com operação de I/O de arquivo, não para array em memória. Isso é um dos principais mecanismos `anti-OOM` da solução;
+  - A saída das imagens também é streamada direto para um blob ZIP, sem acumular todas as imagens na memória antes de subir;
+  - O processamento é incremental: a cada iteração ele captura um frame, grava a `entry` no ZIP e segue. Não existe coleção em memória contendo todos os frames;
+  - O frame convertido é descartado logo após a escrita no ZIP com flush da imagem, o que ajuda a reduzir retenção de memória gráfica;
+  - Os recursos mais pesados usam fechamento automático com `try-with-resources`: `InputStream` do vídeo, `ZipOutputStream` e `FFmpegFrameGrabber`. Isso reduz vazamento de handles e retenção indireta de memória.
 
 </details>
 
@@ -329,10 +347,12 @@ infrastructure/
 | Débito | Descrição | Impacto |
 |--------|-----------|---------|
 | **Workload Identity** | Usar Workload Identity para Pods acessarem recursos Azure (atual: Azure Key Vault Provider) | Melhora de segurança e gestão de credenciais |
-| **Migrar Linguagem Compilada** | Pelo workload deste microsserviço se tratar de `CPU-Bound`, para máximr performance, utilizou-se a GraalVM para criação de uma imagem nativa. Embora os ganhos sejam notórios, especificamente neste microsserviço que utiliza a biblioteca `OpenCV`, observou-se o uso intensivo de `JNI`, `Reflections`, entre outras coisas, e o compilador precisa conhecer tudo que for dinãmico em tempo de build `(reachability metadata)`. Neste sentido, utilizar uma linguagem nativamente compilada (Go, Rust...) pode trazer ganhos de manutenção no futuro | Melhora da manutenabilidade |
+| **Migrar Linguagem Compilada** | Pelo workload deste microsserviço se tratar de `CPU-Bound`, para máximr performance, utilizou-se a `GraalVM` para criação de uma imagem nativa. Embora os ganhos sejam notórios, especificamente neste microsserviço que utiliza a biblioteca `OpenCV`, observou-se o uso intensivo de `JNI`, `Reflections`, entre outras coisas, e o compilador precisa conhecer tudo que for dinãmico em tempo de build [(Reachability Metadata)](worker/src/main/resources/META-INF/README.md). Neste sentido, utilizar uma linguagem nativamente compilada (Go, Rust...) pode trazer ganhos de manutenção no futuro | Melhora da manutenabilidade |
 | **Implementar Outbox Pattern** | Inspirado no padrão `Transactional Outbox Pattern`, teoricamente destinado para atomicidade de publicação de eventos x persistência em bancos relacionais, pensar em uma maneira de garantir que o processamento do vídeo, a geração do zip e a publicação do evento sejam atômicas | Resiliência |
 | **Implementar DLQ** | Implementar lógica de reprocessamento do vídeo em caso de falha | Resiliência |
 | **Implementar BDD** | Utilizar abordagem BDD para desenvolvimento de testes de integração em fluxos críticos | Testabilidade |
+| **Gestão de Storage Efêmero** | O microsserviço realiza o dump do vídeo em disco para evitar `OOM`. É necessário implementar políticas de limpeza rigorosas, Resource Limits `(ephemeral-storage)` e avaliar o uso de `RAMDisk (EmptyDir com Memory - tmpfs)` para evitar gargalos de `I/O` e exaustão de disco no nó do `AKS` | Estabilidade e Resiliência |
+| **Criação FFmpegFrameGrabber** | Atualmente o `FFmpegFrameGrabber` é instanciado a cada captura dos Frames, viabilizando a separação de camadas do `Clean Arch`. Todavia, se o `Garbage Collector` não for rápido o suficiente entre as iterações, ou se houver um pequeno memory leak na `JNI (Java Native Interface)` do `JavaCV/FFmpeg`, o consumo de memória subirá em escada até o `OOM`. Portanto, avaliar possibilidade de mover o `grabber` para fora do `loop` fechando-o apenas no final | Segurança e Resiliência |
 
 </details>
 
