@@ -319,6 +319,17 @@
       "type": "com.azure.messaging.servicebus.models.SubQueue"
     },
     {
+      "type": "com.azure.storage.blob.implementation.models.BlobStorageError",
+      "methods": [
+        {
+          "name": "fromXml",
+          "parameterTypes": [
+            "com.azure.xml.XmlReader"
+          ]
+        }
+      ]
+    },
+    {
       "type": "com.azure.storage.blob.implementation.models.BlobStorageExceptionInternal",
       "methods": [
         {
@@ -361,6 +372,12 @@
           "parameterTypes": []
         }
       ]
+    },
+    {
+      "type": "com.ctc.wstx.stax.WstxInputFactory"
+    },
+    {
+      "type": "com.ctc.wstx.stax.WstxOutputFactory"
     },
     {
       "type": "com.fasterxml.jackson.annotation.JsonAutoDetect$Value"
@@ -12349,6 +12366,12 @@
     },
     {
       "glob": "META-INF/services/javax.xml.parsers.SAXParserFactory"
+    },
+    {
+      "glob": "META-INF/services/javax.xml.stream.XMLInputFactory"
+    },
+    {
+      "glob": "META-INF/services/javax.xml.stream.XMLOutputFactory"
     },
     {
       "glob": "META-INF/services/org.apache.commons.logging.LogFactory"
