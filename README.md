@@ -27,7 +27,8 @@ Microsserviço de processamento de vídeo do ecossistema VideoCore, responsável
   <a href="#contribuicao">Contribuição</a>
 </div><br>
 
-> 📽️ Vídeo de demonstração da arquitetura: [https://youtu.be/k3XbPRxmjCw](https://youtu.be/k3XbPRxmjCw)<br>
+> 📽️ Vídeo de demonstração da arquitetura: [https://www.youtube.com/watch?v=axKA66ruEpM](https://www.youtube.com/watch?v=axKA66ruEpM)<br>
+> 🔗 Projeto no Sonar Cloud: [https://sonarcloud.io/summary/overall?id=FIAP-SOAT-TECH-TEAM_videocore-worker&branch=main](https://sonarcloud.io/summary/overall?id=FIAP-SOAT-TECH-TEAM_videocore-worker&branch=main)<br>
 
 ---
 
